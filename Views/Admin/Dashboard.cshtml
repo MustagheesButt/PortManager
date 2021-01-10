@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    ViewData["sidebar"] = true;
+}
+
+<div class="container">
+    <div id="controls" class="my-3 p-3">
+        <div class="d-flex list justify-content-center">
+            <button class="btn btn-success">Add New Staff</button>
+            <button class="btn btn-success">Add New Trader</button>
+            <button class="btn btn-success">Add New Admin</button>
+        </div>
+        <div class="row g-2 justify-content-center">
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" id="filterByType" aria-label="Type">
+                        <option selected>Show All Users</option>
+                        <option value="0">Admin</option>
+                        <option value="1">Trader</option>
+                        <option value="2">Port Staff</option>
+                    </select>
+                    <label for="filterByType">Select Type</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" id="filterBy" class="form-control" />
+                    <label for="filterBy">Filter by name</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" id="sortBySelect" aria-label="Sort By">
+                        <option value="0" selected>Name</option>
+                        <option value="1">Recent Activity</option>
+                        <option value="2">Updated At</option>
+                        <option value="3">Created At</option>
+                    </select>
+                    <label for="sortBySelect">Sort By</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+
+        @foreach (var user in (List<User>)ViewData["users"])
+        {
+            <div class="col-sm-10 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@user.FullName <small class="text-secondary">@user.Email</small></h5>
+                        <p class="card-text">@user.Type | @(Array.Exists(new string[] {"Male", "Female"}, e => e == @user.Gender) ?
+                        $"{@user.Gender} |" : "") Last updated at @user.UpdatedAt</p>
+                        <a href="#" class="btn btn-primary">Edit</a>
+                        <a href="#" class="btn btn-info">View Activity</a>
+                        <a href="#" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>

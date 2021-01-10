@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "Manage Ships";
+    ViewData["sidebar"] = true;
+}
+
+<div class="container">
+    <div id="controls" class="my-3 p-3">
+        <div class="d-flex list justify-content-center">
+            <button class="btn btn-success">Add New Ship</button>
+        </div>
+        <div class="row g-2 justify-content-center">
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" id="filterByStatus" aria-label="Type">
+                        <option selected>All</option>
+                        <option value="0">Custom Duty Paid</option>
+                        <option value="1">Custom Duty Unpaid</option>
+                        <option value="2">Docked</option>
+                        <option value="2">Not Docked</option>
+                    </select>
+                    <label for="filterByType">Select Status</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" id="filterBy" class="form-control" />
+                    <label for="filterBy">Filter by name, HIN, or trader name</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" id="sortBySelect" aria-label="Sort By">
+                        <option value="0" selected>Name</option>
+                        <option value="1">HIN</option>
+                        <option value="1">Trader Name</option>
+                        <option value="1">Custom Duty</option>
+                        <option value="2">Updated At</option>
+                        <option value="3">Created At</option>
+                    </select>
+                    <label for="sortBySelect">Sort By</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+
+        @foreach (var ship in (List<Ship>)ViewData["ships"])
+        {
+            <div class="col-sm-10 mb-2">
+                <div class="card @(ship.CustomDuty == 0 ? "border border-success" : "")">
+                    <div class="card-body">
+                        <h5 class="card-title">@ship.NickName <small class="text-secondary">@ship.HIN</small> @if (ship.CustomDuty == 0) {
+                            <span class="badge bg-success float-end">Duty Paid</span>
+                        } else {
+                            <span class="badge bg-warning float-end">Duty Due</span>
+                        }
+                        </h5>
+                        <p class="card-text">@PortManager.Models.User.GetUser(ship.trader_id).FullName | Last updated at
+                            @ship.UpdatedAt</p>
+                         <a href="#" class="btn btn-primary">Edit</a>
+                        <a href="#" class="btn btn-info">View Activity</a>
+                        <a href="#" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
