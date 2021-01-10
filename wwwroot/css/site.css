@@ -67,7 +67,7 @@ body {
   bottom: 0;
   width: 100%;
   white-space: nowrap;
-  line-height: 56px; /* Vertically center the text there */
+  line-height: 52px; /* Vertically center the text there */
 }
 
 .btns > a, button, input, select, div {

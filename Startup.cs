@@ -51,10 +51,6 @@ namespace PortManager
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action}");
-                endpoints.MapControllerRoute(
-                    name: "static",
-                    pattern: "{Page=Index}",
-                    defaults: new { controller = "Static", action = "Index" });
             });
         }
     }

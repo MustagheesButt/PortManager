@@ -9,31 +9,30 @@ using PortManager.Models;
 
 namespace PortManager.Controllers
 {
-    public class AdminController : Controller
+    public class TraderController : Controller
     {
         private readonly ILogger<StaticController> _logger;
 
-        public AdminController(ILogger<StaticController> logger)
+        public TraderController(ILogger<StaticController> logger)
         {
             _logger = logger;
         }
 
-        [Route("/Admin")]
+        [Route("/Trader")]
         public IActionResult Dashboard()
         {
-            ViewData["users"] = Models.User.GetUsers();
+            ViewData["ships"] = Models.Ship.GetShipsByTrader(1);
             return View();
         }
 
-        public IActionResult Ships()
+        public IActionResult AddShip()
         {
-            ViewData["ships"] = Models.Ship.GetShips();
             return View();
         }
 
-        public IActionResult CustomDuties()
+        [HttpGet("Trader/UpdateShip/{ship_id}")]
+        public IActionResult UpdateShip(int ship_id)
         {
-            ViewData["duties"] = Models.CustomDuty.GetCustomDuties();
             return View();
         }
 

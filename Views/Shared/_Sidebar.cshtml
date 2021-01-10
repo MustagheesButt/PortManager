@@ -1,8 +1,14 @@
 <aside class="col-md-2 bg-dark">
     <nav class="nav flex-column mt-5 text-light">
-        <a class="nav-link active" aria-current="page" href="Admin">Users</a>
-        <a class="nav-link" href="/Admin/Ships">Ships</a>
-        <a class="nav-link" href="/Admin/Custom-duties">Custom Duties</a>
-        <a class="nav-link" href="/Admin/Settings">Settings</a>
+        @if ((string)ViewData["Title"] == "Trader Dashboard") {
+            <a class="nav-link" href="/Trader/Ships">Ships</a>
+            <a class="nav-link" href="/Trader/CustomDuties">Custom Duties</a>
+            <a class="nav-link" href="/Trader/Settings">Settings</a>
+        } else {
+            <a class="nav-link active" aria-current="page" href="/Admin">Users</a>
+            <a class="nav-link" href="/Admin/Ships">Ships</a>
+            <a class="nav-link" href="/Admin/CustomDuties">Custom Duties</a>
+            <a class="nav-link" href="/Admin/Settings">Settings</a>
+        }
     </nav>
 </aside>

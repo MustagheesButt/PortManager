@@ -1,5 +1,9 @@
 ﻿@{
-    string[] protected_pages = { "Admin Dashboard" };
+    string[] protected_pages = {
+        "Admin Dashboard", "Manage Ships", "Manage Custom Duties",
+        "Trader Dashboard", "Staff Dashboard"
+    };
+
     Boolean HasSidebar = false;
     if (ViewData.ContainsKey("sidebar") && (Boolean)ViewData["sidebar"])
         HasSidebar = true;
@@ -39,7 +43,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Static" asp-action="Index">Home</a>
+                                <a class="nav-link text-dark" href="/">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link
@@ -54,16 +58,16 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid p-0">
+    <div class="container-fluid">
         <div class="row">
             @if (HasSidebar)
             {
                 <partial name="_Sidebar" />
             }
-            <main role="main" class="pb-3 col">
+            <main role="main" class="col">
                 @RenderBody()
             </main>
-        <div>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">

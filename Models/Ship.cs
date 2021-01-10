@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PortManager.Models
 {
@@ -41,9 +42,9 @@ namespace PortManager.Models
         }
 
         private static Ship[] arr = {
-            new Ship(1, "123", 1, "MarineWay", 1, 1, 0),
+            new Ship(1, "123", 1, "HMS Ark Victory", 1, 1, 0),
             new Ship(2, "234", 1, "Sunny Go", 1, 2, 1000),
-            new Ship(3, "345", 2, "Merry", 1, 3, 10000),
+            new Ship(3, "345", 2, "Going Merry", 1, 3, 10000),
             new Ship(4, "456", 2, "Avenger", 2, 1, 5999),
             new Ship(5, "567", 3, "Providence", 2, 2, 15999)
         };
@@ -51,6 +52,16 @@ namespace PortManager.Models
         public static List<Ship> GetShips()
         {
             return new List<Ship>(arr);
+        }
+
+        public static Ship GetShip(int id)
+        {
+            return arr.First<Ship>(s => s.id == id);
+        }
+
+        public static List<Ship> GetShipsByTrader(int trader_id)
+        {
+            return arr.Where<Ship>(s => s.trader_id == trader_id).ToList();
         }
     }
 }

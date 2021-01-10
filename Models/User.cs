@@ -68,10 +68,10 @@ namespace PortManager.Models
 
         private static User[] arr = {
             new User(1, "Test User", "#1", "test1@yahoo.com", 0, 1),
-            new User(2, "Test User", "#2", "test1@yahoo.com", 1, 1),
-            new User(3, "Test User", "#3", "test1@yahoo.com", 2, 1),
+            new User(2, "Test User", "#2", "test1@yahoo.com", 1, 2),
+            new User(3, "Test User", "#3", "test1@yahoo.com", 2, 2),
             new User(4, "Test User", "#4", "test1@yahoo.com", 1, 1),
-            new User(5, "Test User", "#5", "test1@yahoo.com", 0, 1)
+            new User(5, "Test User", "#5", "test1@yahoo.com", 0, 0)
         };
 
         public static List<User> GetUsers()
