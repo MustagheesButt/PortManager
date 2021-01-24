@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Web;
-using System.IO;
-using System.Configuration;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Http;
 
 namespace PortManager.Models
 {
@@ -23,7 +17,8 @@ namespace PortManager.Models
         private int _Gender;
         public string Gender
         {
-            get {
+            get
+            {
                 switch (this._Gender)
                 {
                     case 0:
@@ -38,8 +33,10 @@ namespace PortManager.Models
             }
         }
         private int _Type { get; set; }
-        public string Type {
-            get {
+        public string Type
+        {
+            get
+            {
                 switch (this._Type)
                 {
                     case 0:
@@ -57,9 +54,24 @@ namespace PortManager.Models
         public DateTime UpdatedAt { get; set; }
         public string FullName
         {
-            get {
+            get
+            {
                 return $"{this.FirstName} {this.LastName}";
             }
+        }
+
+        // use this at registration
+        public User(string FirstName, string LastName, string Email, string PasswordHash, int Type)
+        {
+            this.FirstName    = FirstName;
+            this.LastName     = LastName;
+            this.Email        = Email;
+            this.PasswordHash = PasswordHash;
+            this._Gender      = 0;
+            this._Type        = Type;
+
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
         }
 
         public User(int id, string FirstName, string LastName, string Email, int Gender, int Type)
@@ -74,7 +86,7 @@ namespace PortManager.Models
             this.CreatedAt = DateTime.Now;
             this.UpdatedAt = DateTime.Now;
         }
-        
+
         public static void Add_User(User obj)
         {
             SqlConnection conn = new SqlConnection(connString);
@@ -98,7 +110,7 @@ namespace PortManager.Models
 
             while (dr.Read())
             {
-                users.Add(new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3] , (int)dr[4]));
+                users.Add(new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3], (int)dr[4]));
             }
 
             return users;
@@ -119,14 +131,18 @@ namespace PortManager.Models
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader dr = cmd.ExecuteReader();
 
-            if(dr.Read())
+            if (dr.Read())
             {
-                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3] , (int)dr[4]);
+                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3], (int)dr[4]);
             }
-
             else { return null; }
+        }
 
-            
+        public static String hash(String Password)
+        {
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(Password);
+            data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+            return System.Text.Encoding.ASCII.GetString(data);
         }
     }
 }

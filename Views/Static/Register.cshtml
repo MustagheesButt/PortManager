@@ -7,12 +7,12 @@
     <div class="col-sm-4" style="margin: 7rem 0;">
         <div class="card" style="background-color: #FFFFFFAA; backdrop-filter: blur(3px);">
             <div class="card-body">
-                <h5 class="card-title">Register</h5>
+                <h5 class="card-title text-center">Register As Trader</h5>
 
-                <form action="Register" method="POST">
+                <form action="Trader/Register" method="POST">
                     <div class="mb-3">
                         <label for="FirstName" class="form-label">First Name</label>
-                        <input type="text" name="email" class="form-control" id="FirstName"
+                        <input type="text" name="FirstName" class="form-control" id="FirstName"
                                placeholder="First Name" />
                     </div>
                     <div class="mb-3">
@@ -23,17 +23,67 @@
 
                     <div class="mb-3">
                         <label for="emailInput" class="form-label">Email Address</label>
-                        <input type="email" name="email" class="form-control" id="emailInput"
+                        <input type="email" name="Email" class="form-control" id="emailInput"
                                placeholder="name@example.com" />
                     </div>
                     <div class="mb-3">
                         <label for="passwordInput" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="passwordInput"
+                        <input type="password" name="Password" class="form-control" id="passwordInput"
                                placeholder="Password" />
                     </div>
                     <div class="mb-3">
                         <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
-                        <input type="password" name="confirmPassword" class="form-control" id="confirmPasswordInput"
+                        <input type="password" name="ConfirmPassword" class="form-control" id="confirmPasswordInput"
+                               placeholder="Retype Password" />
+                    </div>
+
+                    <div class="card-text mb-3">
+                        <p>
+                            By registering, you agree to the <a href="#">Terms & Conditions</a> and <a href="#">
+                                Privacy
+                                policy
+                            </a>.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4" style="margin: 7rem 0;">
+        <div class="card" style="background-color: #FFFFFFAA; backdrop-filter: blur(3px);">
+            <div class="card-body">
+                <h5 class="card-title text-center">Register As Staff</h5>
+
+                <form action="PortStaff/Register" method="POST">
+                    <div class="mb-3">
+                        <label for="FirstName" class="form-label">First Name</label>
+                        <input type="text" name="FirstName" class="form-control" id="FirstName"
+                               placeholder="First Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="LastName" class="form-label">Last Name</label>
+                        <input type="text" name="LastName" class="form-control" id="LastName"
+                               placeholder="Last Name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email Address</label>
+                        <input type="email" name="Email" class="form-control" id="emailInput"
+                               placeholder="name@example.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password</label>
+                        <input type="password" name="Password" class="form-control" id="passwordInput"
+                               placeholder="Password" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" class="form-control" id="confirmPasswordInput"
                                placeholder="Retype Password" />
                     </div>
 

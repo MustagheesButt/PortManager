@@ -9,11 +9,11 @@ using PortManager.Models;
 
 namespace PortManager.Controllers
 {
-    public class TraderController : Controller
+    public class PortStaffController : Controller
     {
         private readonly ILogger<StaticController> _logger;
 
-        public TraderController(ILogger<StaticController> logger)
+        public PortStaffController(ILogger<StaticController> logger)
         {
             _logger = logger;
         }
@@ -27,26 +27,15 @@ namespace PortManager.Controllers
                 return Redirect("/Register");
             }
 
-            User user = new User(FirstName, LastName, Email, Models.User.hash(Password), 1);
+            User user = new User(FirstName, LastName, Email, Models.User.hash(Password), 2);
             
-            return RedirectToAction("Dashboard", "Trader");
+            return RedirectToAction("Dashboard", "PortStaff");
         }
 
-        [Route("/Trader")]
+        [Route("/PortStaff")]
         public IActionResult Dashboard()
         {
             ViewData["ships"] = Models.Ship.GetShipsByTrader(1);
-            return View();
-        }
-
-        public IActionResult AddShip()
-        {
-            return View();
-        }
-
-        [HttpGet("Trader/UpdateShip/{ship_id}")]
-        public IActionResult UpdateShip(int ship_id)
-        {
             return View();
         }
 
