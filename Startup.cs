@@ -23,6 +23,8 @@ namespace PortManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             services.AddControllersWithViews();
         }
 
@@ -42,15 +44,16 @@ namespace PortManager
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
-
+         
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action}");
+                    pattern: "{controller}/{action}/{id?}");
             });
         }
     }

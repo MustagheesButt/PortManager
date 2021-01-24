@@ -1,0 +1,15 @@
+Query for User
+CREATE TABLE [dbo].[user] (
+    [Id]            INT         IDENTITY (1, 1) NOT NULL,
+    [first_name]    NCHAR (100) NULL,
+    [last_name]     NCHAR (100) NULL,
+    [email]         NCHAR (500) NULL,
+    [password_hash] NCHAR (100) NULL,
+    [cnic]          NCHAR (100) NULL,
+    [user_type]     INT         NULL,
+    [gender]        INT         NULL,
+    [created_at] DATETIME NULL, 
+    [updated_at] DATETIME NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+

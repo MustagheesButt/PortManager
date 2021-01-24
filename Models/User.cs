@@ -1,16 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Web;
+using System.IO;
+using System.Configuration;
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 
 namespace PortManager.Models
 {
     public class User
     {
+        public static string connString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PortManager;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public int id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string CNIC { get; set; }
+        public int UserType { get; set; }
         private int _Gender;
         public string Gender
         {
@@ -65,23 +74,59 @@ namespace PortManager.Models
             this.CreatedAt = DateTime.Now;
             this.UpdatedAt = DateTime.Now;
         }
-
-        private static User[] arr = {
-            new User(1, "Test User", "#1", "test1@yahoo.com", 0, 1),
-            new User(2, "Test User", "#2", "test1@yahoo.com", 1, 2),
-            new User(3, "Test User", "#3", "test1@yahoo.com", 2, 2),
-            new User(4, "Test User", "#4", "test1@yahoo.com", 1, 1),
-            new User(5, "Test User", "#5", "test1@yahoo.com", 0, 0)
-        };
+        
+        public static void Add_User(User obj)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            string query = $"insert into [user] (first_name , last_name , email , password , cnic , user_type , gender , user_type , created_at , updated_at ) values ('{obj.FirstName}' , '{obj.LastName}' , '{obj.Email}' , '{obj.PasswordHash}' , '{obj.CNIC}' , '{obj.UserType}' , '{obj.CreatedAt}' , '{obj.UpdatedAt}')";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
 
         public static List<User> GetUsers()
         {
-            return new List<User>(arr);
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"select * from [user]";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<User> users = new List<User>();
+
+            while (dr.Read())
+            {
+                users.Add(new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3] , (int)dr[4]));
+            }
+
+            return users;
         }
 
         public static User GetUser(int user_id)
         {
-            return Array.Find<User>(arr, e => e.id == user_id);
+            List<User> arr = User.GetUsers();
+            return arr.Find(e => e.id == user_id);
+        }
+
+        public static User GetUserByEmail(string email)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"select * from [user] where  email = '{email}'  ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if(dr.Read())
+            {
+                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3] , (int)dr[4]);
+            }
+
+            else { return null; }
+
+            
         }
     }
 }

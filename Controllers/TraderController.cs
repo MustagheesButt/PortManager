@@ -18,6 +18,18 @@ namespace PortManager.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        public IActionResult Register(String FirstName, String LastName, String Email, String Password, String ConfirmPassword)
+        {
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(Password);
+            data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+            String hash = System.Text.Encoding.ASCII.GetString(data);
+
+            User obj;
+            
+            return RedirectToAction("Dashboard", "Trader");
+        }
+
         [Route("/Trader")]
         public IActionResult Dashboard()
         {
