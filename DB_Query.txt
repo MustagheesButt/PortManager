@@ -13,3 +13,36 @@ CREATE TABLE [dbo].[user] (
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+CREATE TABLE [dbo].[trader] (
+    [user_id]         INT         NOT NULL,
+    [nationality]     NCHAR (100) NULL,
+    [trading_number]  NCHAR (100) NULL
+);
+
+CREATE TABLE [dbo].[ship] (
+    [id]                  INT         IDENTITY (1, 1) NOT NULL,
+    [hin]                 NCHAR (100) NOT NULL,
+    [trader_id]           INT NOT NULL,
+    [nick_name]           NCHAR (100) NULL,
+    [allocated_birth]     INT NULL,
+    [allocated_terminal]  INT NULL,
+    [created_at] DATETIME NULL, 
+    [updated_at] DATETIME NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[item] (
+    [id]                  INT         IDENTITY (1, 1) NOT NULL,
+    [name]                NCHAR (100) NOT NULL,
+    [quantity]            INT NOT NULL,
+    [created_at] DATETIME NULL, 
+    [updated_at] DATETIME NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[items_ships] (
+    [item_id]             INT NOT NULL,
+    [ship_id]             INT NOT NULL,
+    [created_at] DATETIME NULL, 
+    [updated_at] DATETIME NULL
+);

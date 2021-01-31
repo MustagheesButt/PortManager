@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace PortManager.Models
 {
     public class User
     {
-        public static string connString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PortManager;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        public static String connString = "";
+
         public int id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

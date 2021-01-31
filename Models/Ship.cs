@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace PortManager.Models
 {
     public class Ship
     {
+        public static String connString = "";
         public int id { get; set; }
         public string HIN { get; set; }
         public int trader_id { get; set; }
         public string NickName { get; set; }
         public int AllocatedBirth { get; set; }
         public int AllocatedTerminal { get; set; }
-        public int CustomDuty { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
@@ -26,13 +27,12 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
-        public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal, int CustomDuty)
+        public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal)
         {
             this.id         = id;
             this.HIN        = HIN;
             this.trader_id  = trader_id;
             this.NickName   = NickName;
-            this.CustomDuty = CustomDuty;
             
             this.AllocatedBirth    = AllocatedBirth;
             this.AllocatedTerminal = AllocatedTerminal;
@@ -41,26 +41,59 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
-        private static Ship[] arr = {
-            new Ship(1, "123", 1, "HMS Ark Victory", 1, 1, 0),
-            new Ship(2, "234", 1, "Sunny Go", 1, 2, 1000),
-            new Ship(3, "345", 2, "Going Merry", 1, 3, 10000),
-            new Ship(4, "456", 2, "Avenger", 2, 1, 5999),
-            new Ship(5, "567", 3, "Providence", 2, 2, 15999)
-        };
+        public int CustomDuty()
+        {
+            return 5000;
+        }
+
+        public static void AddShip(Ship ship)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            // TODO check if ship exists in DB. if yes, then throw exception
+            string query = $"insert into [ship] (hin, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', '{ship.CreatedAt}', '{ship.UpdatedAt}')";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
 
         public static List<Ship> GetShips()
         {
-            return new List<Ship>(arr);
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"select * from [ship]";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<Ship> ships = new List<Ship>();
+
+            while (dr.Read())
+            {
+                int
+                    Id = (int)dr[0],
+                    TraderId = (int)dr[2],
+                    AllocatedBirth = (int)dr[4],
+                    AllocatedTerminal = (int)dr[5];
+                string
+                    HIN = (string)dr[1],
+                    NickName = (string)dr[3];
+                
+                ships.Add(new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal));
+            }
+
+            return ships;
         }
 
-        public static Ship GetShip(int id)
+        public static Ship GetShip(int ship_id)
         {
-            return arr.First<Ship>(s => s.id == id);
+            List<Ship> arr = Ship.GetShips();
+            return arr.Find(e => e.id == ship_id);
         }
 
         public static List<Ship> GetShipsByTrader(int trader_id)
         {
+            List<Ship> arr = Ship.GetShips();
             return arr.Where<Ship>(s => s.trader_id == trader_id).ToList();
         }
     }
