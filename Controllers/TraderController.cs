@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PortManager.Models;
@@ -27,15 +28,27 @@ namespace PortManager.Controllers
                 return Redirect("/Register");
             }
 
+            // check if email exists
+            if (Models.User.GetUserByEmail(Email) != null)
+            {
+                TempData["errors"] = $"{Email} is already registered with us.";
+                return Redirect("/Register");
+            }
+
             User user = new User(FirstName, LastName, Email, Models.User.hash(Password), 1);
-            
+
+            Models.User.Add_User(user);
+
+            // successfull register. set session
+            HttpContext.Session.SetInt32("user_id", user.id);
+
             return RedirectToAction("Dashboard", "Trader");
         }
 
         [Route("/Trader")]
         public IActionResult Dashboard()
         {
-            ViewData["ships"] = Models.Ship.GetShipsByTrader(1);
+            ViewData["ships"] = Ship.GetShipsByTrader(1);
             return View();
         }
 

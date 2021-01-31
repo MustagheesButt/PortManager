@@ -13,7 +13,6 @@ namespace PortManager.Models
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string CNIC { get; set; }
-        public int UserType { get; set; }
         private int _Gender;
         public string Gender
         {
@@ -87,12 +86,28 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
+        public User(int id, string FirstName, string LastName, string Email, string PasswordHash, int Gender, int Type)
+        {
+            this.id = id;
+            this.FirstName = FirstName;
+            this.LastName = LastName;
+            this.Email = Email;
+            this.PasswordHash = PasswordHash;
+            this._Gender = Gender;
+            this._Type = Type;
+
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+        }
+
         public static void Add_User(User obj)
         {
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
-            string query = $"insert into [user] (first_name , last_name , email , password , cnic , user_type , gender , user_type , created_at , updated_at ) values ('{obj.FirstName}' , '{obj.LastName}' , '{obj.Email}' , '{obj.PasswordHash}' , '{obj.CNIC}' , '{obj.UserType}' , '{obj.CreatedAt}' , '{obj.UpdatedAt}')";
+            // TODO check if user exists in DB. if yes, then throw exception
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) values ('{obj.FirstName}', '{obj.LastName}', '{obj.Email}', @PasswordHash, '{obj.CNIC}', {obj._Type}, '{obj._Gender}', '{obj.CreatedAt}', '{obj.UpdatedAt}')";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
             cmd.ExecuteNonQuery();
             conn.Close();
         }
@@ -110,7 +125,15 @@ namespace PortManager.Models
 
             while (dr.Read())
             {
-                users.Add(new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3], (int)dr[4]));
+                int
+                    Id = (int)dr[0],
+                    UserType = (int)dr[6],
+                    Gender = (int)dr[7];
+                string
+                    FirstName = dr[1].ToString(),
+                    LastName = dr[2].ToString(),
+                    Email = dr[3].ToString();
+                users.Add(new User(Id, FirstName, LastName, Email, Gender, UserType));
             }
 
             return users;
@@ -133,16 +156,16 @@ namespace PortManager.Models
 
             if (dr.Read())
             {
-                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[2], (int)dr[3], (int)dr[4]);
+                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[3], (string)dr[4], (int)dr[7], (int)dr[6]);
             }
             else { return null; }
         }
 
         public static String hash(String Password)
         {
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(Password);
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(Password);
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
-            return System.Text.Encoding.ASCII.GetString(data);
+            return System.Text.Encoding.UTF8.GetString(data);
         }
     }
 }
