@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Data.SqlClient;
+
 
 namespace PortManager.Controllers
 {
@@ -33,7 +35,8 @@ namespace PortManager.Controllers
             //message.From = from;
             //message.To = email;
             message.Subject = "Password Recovery";
-            message.Body = $"Your Password is {user.password_hash} ";
+            string pass = user.PasswordHash.ToString();
+            message.Body = $"Your Password is {pass} ";
 
             SmtpClient smpt = new SmtpClient();
             smpt.Host = "smtp@gmail.com";
