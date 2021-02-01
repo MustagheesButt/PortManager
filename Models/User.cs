@@ -7,7 +7,7 @@ namespace PortManager.Models
 {
     public class User
     {
-        public static String connString = "";
+        public static String connString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PortManager;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public int id { get; set; }
         public string FirstName { get; set; }
