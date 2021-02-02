@@ -35,11 +35,9 @@ namespace PortManager.Controllers
                 return Redirect("/Register");
             }
 
+            Models.User user = Models.User.GetUserByEmail(Email);
             
             Models.User.Add_Trader(FirstName , LastName , Email , Password , 1);
-
-            
-             Models.User user = Models.User.GetUserByEmail(Email);
 
             HttpContext.Session.SetInt32("user_id", user.id);
 
@@ -49,7 +47,7 @@ namespace PortManager.Controllers
         [Route("/Trader")]
         public IActionResult Dashboard()
         {
-            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            int  trader_id = (int)HttpContext.Session.GetInt32("user_id");
             ViewData["ships"] = Ship.GetShipsByTrader(trader_id);
             //Console.WriteLine(trader_id);
             return View("Dashboard" , trader_id);

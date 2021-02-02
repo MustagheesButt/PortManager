@@ -76,7 +76,7 @@ namespace PortManager.Controllers
             // hash input password
             //String hash = Models.User.hash(Password);
 
-            if (Models.User.GetUserByEmailAndPassword(Email , Password) != null)
+            if (user.PasswordHash.Trim() == Password)
             {
                 // successfull login. set session and redirect
                 HttpContext.Session.SetInt32("user_id", user.id);
@@ -84,6 +84,7 @@ namespace PortManager.Controllers
                 if (user.Type == "Admin")
                     return RedirectToAction("Dashboard", "Admin");
                 else if (user.Type == "Trader")
+
                     return RedirectToAction("Dashboard", "Trader");
                 else
                     return RedirectToAction("Dashboard", "PortStaff");

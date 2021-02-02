@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace PortManager.Models
 {
@@ -87,8 +90,33 @@ namespace PortManager.Models
 
         public static Ship GetShip(int ship_id)
         {
-            List<Ship> arr = Ship.GetShips();
-            return arr.Find(e => e.id == ship_id);
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"select * from [ship] where id = '{ship_id}' ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            
+
+            if (dr.Read())
+            {
+                int
+                    Id = (int)dr[0],
+                    TraderId = (int)dr[2],
+                    AllocatedBirth = (int)dr[4],
+                    AllocatedTerminal = (int)dr[5];
+                string
+                    HIN = (string)dr[1],
+                    NickName = (string)dr[3];
+                
+                Ship ship = new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal);
+                return ship;
+            }else{
+                
+                return null ;
+            }
+
         }
 
         public static List<Ship> GetShipsByTrader(int trader_id)

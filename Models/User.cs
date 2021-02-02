@@ -18,7 +18,7 @@ namespace PortManager.Models
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string CNIC { get; set; }
-        private int _Gender;
+        public int _Gender;
         public string Gender
         {
             get
@@ -81,6 +81,7 @@ namespace PortManager.Models
 
         public User(int id , string FirstName, string LastName, string Email, string PasswordHash, int Type )
         {
+            this.id = id ;
             this.FirstName    = FirstName;
             this.LastName     = LastName;
             this.Email        = Email;
@@ -175,7 +176,8 @@ namespace PortManager.Models
 
             if (dr.Read())
             {
-                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[3], (string)dr[4], (int)dr[6]);
+                User user = new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[3], (string)dr[4], (int)dr[6]);
+                return user ;
             }
             else { return null; }
         }

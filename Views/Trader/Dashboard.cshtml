@@ -3,6 +3,8 @@
     ViewData["sidebar"] = true;
 }
 
+@using PortManager.Models;
+
 <div class="container">
     <h1>@Model</h1>
     <div id="controls" class="my-3 p-3">
@@ -49,56 +51,56 @@
     <div class="row justify-content-center">
         @if (((List<Ship>)ViewData["ships"]).Count == 0)
         {
-            <p>There are no ships right now. Start by adding some new ships.</p>
+        <p>There are no ships right now. Start by adding some new ships.</p>
         }
         else
         {
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
 
-            @foreach (var ship in (List<Ship>)ViewData["ships"])
+        @foreach (var ship in (List<Ship>)ViewData["ships"])
             {
-                <div class="col-sm-10 mb-2">
-                    <div class="card @(ship.CustomDuty() == 0 ? "border border-success" : "")">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                @ship.NickName <small class="text-secondary">@ship.HIN</small> @if (ship.CustomDuty() == 0)
+        <div class="col-sm-10 mb-2">
+            <div class="card @(ship.CustomDuty() == 0 ? "border border-success" : "")">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @ship.NickName <small class="text-secondary">@ship.HIN</small> @if (ship.CustomDuty() == 0)
                                 {
-                                    <span class="badge bg-success float-end">Duty Paid</span>
+                        <span class="badge bg-success float-end">Duty Paid</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-warning float-end">Duty Due</span>
+                        <span class="badge bg-warning float-end">Duty Due</span>
                                 }
-                            </h5>
-                            <p class="card-text">
-                                @PortManager.Models.User.GetUser(ship.trader_id).FullName | Last updated at
-                                @ship.UpdatedAt
-                            </p>
-                            <a href="#" class="btn btn-primary">Edit</a>
-                            <a href="#" class="btn btn-info">View Activity</a>
-                            <a href="#" class="btn btn-danger">Delete</a>
-                        </div>
-                    </div>
+                    </h5>
+                    <p class="card-text">
+                        @PortManager.Models.User.GetUser(ship.trader_id).FullName | Last updated at
+                        @ship.UpdatedAt
+                    </p>
+                    <a href="#" class="btn btn-primary">Edit</a>
+                    <a href="#" class="btn btn-info">View Activity</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
                 </div>
+            </div>
+        </div>
             }
 
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
         }
     </div>
 </div>
