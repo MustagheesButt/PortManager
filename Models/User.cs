@@ -93,6 +93,19 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
+        public User(int id, string FirstName, string LastName, string Email, int Type)
+        {
+            this.id        = id;
+            this.FirstName = FirstName;
+            this.LastName  = LastName;
+            this.Email     = Email;
+            //this._Gender   = Gender;
+            this._Type     = Type;
+
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+        }
+
         public User(int id, string FirstName, string LastName, string Email, int Gender, int Type)
         {
             this.id        = id;
@@ -147,13 +160,13 @@ namespace PortManager.Models
             {
                 int
                     Id = (int)dr[0],
-                    UserType = (int)dr[6],
-                    Gender = (int)dr[7];
+                    UserType = (int)dr[6];
+                    //Gender = (int)dr[7];
                 string
                     FirstName = dr[1].ToString(),
                     LastName = dr[2].ToString(),
                     Email = dr[3].ToString();
-                users.Add(new User(Id, FirstName, LastName, Email, Gender, UserType));
+                users.Add(new User(Id, FirstName, LastName, Email, UserType));
             }
 
             return users;

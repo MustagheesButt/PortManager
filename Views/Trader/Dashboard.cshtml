@@ -9,7 +9,7 @@
     <h1>@Model</h1>
     <div id="controls" class="my-3 p-3">
         <div class="d-flex list justify-content-center">
-            <a href="/Trader/AddShip" class="btn btn-success">Add New Ship</a>
+            <a href="/Trader/AddShip/@Model" class="btn btn-success">Add New Ship</a>
         </div>
         <div class="row g-2 justify-content-center">
             <div class="col-md">
@@ -65,7 +65,7 @@
             </ul>
         </nav>
 
-        @foreach (var ship in (List<Ship>)ViewData["ships"])
+        foreach (var ship in (List<Ship>)ViewData["ships"])
             {
         <div class="col-sm-10 mb-2">
             <div class="card @(ship.CustomDuty() == 0 ? "border border-success" : "")">

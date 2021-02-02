@@ -44,6 +44,20 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
+        public Ship(string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal)
+        {
+            this.id         = id;
+            this.HIN        = HIN;
+            this.trader_id  = trader_id;
+            this.NickName   = NickName;
+            
+            this.AllocatedBirth    = AllocatedBirth;
+            this.AllocatedTerminal = AllocatedTerminal;
+
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+        }
+
         public int CustomDuty()
         {
             return 5000;
@@ -54,7 +68,7 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"insert into [ship] (hin, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', '{ship.CreatedAt}', '{ship.UpdatedAt}')";
+            string query = $"insert into [ship] (hin, trader_id , nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.trader_id}' ,'{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', '{ship.CreatedAt}', '{ship.UpdatedAt}')";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.ExecuteNonQuery();
             conn.Close();

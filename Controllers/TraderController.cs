@@ -47,7 +47,7 @@ namespace PortManager.Controllers
         [Route("/Trader")]
         public IActionResult Dashboard()
         {
-            int  trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
             ViewData["ships"] = Ship.GetShipsByTrader(trader_id);
             //Console.WriteLine(trader_id);
             return View("Dashboard" , trader_id);
@@ -70,9 +70,18 @@ namespace PortManager.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-         public IActionResult AddShipForm()
+        [HttpGet("Trader/AddShip/{trader_id}")]
+        public IActionResult AddShip(int trader_id)
         {
-            return View();
+            return View("AddShip" , trader_id);
+        }
+
+        [HttpPost]
+        public IActionResult AddShipForm(string hin , string nick_name , int alloc_birth , int alloc_term , int trader_id)
+        {
+            Ship add_ship = new Ship(hin , trader_id , nick_name , alloc_birth , alloc_term);
+            PortManager.Models.Ship.AddShip(add_ship);
+            return RedirectToAction("Dashboard", "Trader");
         }
     }
 }
