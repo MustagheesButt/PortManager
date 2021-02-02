@@ -35,7 +35,7 @@ namespace PortManager.Controllers
                 return Redirect("/Register");
             }
 
-            User user = new User(FirstName, LastName, Email, Models.User.hash(Password), 1);
+            User user = new User(FirstName, LastName, Email, Password , 1);
 
             Models.User.Add_User(user);
 

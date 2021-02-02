@@ -36,16 +36,16 @@ namespace PortManager.Controllers
             //message.To = email;
             message.Subject = "Password Recovery";
             string pass = user.PasswordHash.ToString();
-            message.Body = $"Your Password is {pass} ";
+            message.Body = $"Your Password is {user.PasswordHash} ";
 
             SmtpClient smpt = new SmtpClient();
-            smpt.Host = "smtp@gmail.com";
+            smpt.Host = "smtp.gmail.com";
             smpt.Port = 587;
             //SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
             smpt.EnableSsl = true;
 
             NetworkCredential nc = new NetworkCredential("bcsf16m538@pucit.edu.pk", "Sheikh993");
-            smpt.UseDefaultCredentials = true;
+            smpt.UseDefaultCredentials = false;
             smpt.Credentials = nc;
 
             try
@@ -56,6 +56,7 @@ namespace PortManager.Controllers
             {
                 Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
                     ex.ToString());
+                Console.WriteLine(ex.Message);
             }
 
             return Redirect("/Login");
@@ -73,9 +74,9 @@ namespace PortManager.Controllers
             }
 
             // hash input password
-            String hash = Models.User.hash(Password);
+            //String hash = Models.User.hash(Password);
 
-            if (user.PasswordHash.Trim().Equals(hash))
+            if (Models.User.GetUserByEmailAndPassword(Email , Password) != null)
             {
                 // successfull login. set session and redirect
                 HttpContext.Session.SetInt32("user_id", user.id);

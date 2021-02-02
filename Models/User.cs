@@ -10,7 +10,7 @@ namespace PortManager.Models
 {
     public class User
     {
-        public static String connString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PortManager;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        public static String connString = @"";
 
         public int id { get; set; }
         public string FirstName { get; set; }
@@ -156,6 +156,22 @@ namespace PortManager.Models
             conn.Open();
 
             string query = $"select * from [user] where  email = '{email}'  ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.Read())
+            {
+                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[3], (string)dr[4], (int)dr[7], (int)dr[6]);
+            }
+            else { return null; }
+        }
+
+        public static User GetUserByEmailAndPassword(string email , string password)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"select * from [user] where  email = '{email}' and  password_hash = '{password}'  ";
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader dr = cmd.ExecuteReader();
 
