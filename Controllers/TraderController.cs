@@ -35,11 +35,12 @@ namespace PortManager.Controllers
                 return Redirect("/Register");
             }
 
-            User user = new User(FirstName, LastName, Email, Password , 1);
+            
+            Models.User.Add_Trader(FirstName , LastName , Email , Password , 1);
 
-            Models.User.Add_User(user);
+            
+             Models.User user = Models.User.GetUserByEmail(Email);
 
-            // successfull register. set session
             HttpContext.Session.SetInt32("user_id", user.id);
 
             return RedirectToAction("Dashboard", "Trader");
@@ -48,8 +49,10 @@ namespace PortManager.Controllers
         [Route("/Trader")]
         public IActionResult Dashboard()
         {
-            ViewData["ships"] = Ship.GetShipsByTrader((int)HttpContext.Session.GetInt32("user_id"));
-            return View();
+            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            ViewData["ships"] = Ship.GetShipsByTrader(trader_id);
+            //Console.WriteLine(trader_id);
+            return View("Dashboard" , trader_id);
         }
 
         public IActionResult AddShip()
@@ -67,6 +70,11 @@ namespace PortManager.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+         public IActionResult AddShipForm()
+        {
+            return View();
         }
     }
 }

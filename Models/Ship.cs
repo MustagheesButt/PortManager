@@ -93,8 +93,30 @@ namespace PortManager.Models
 
         public static List<Ship> GetShipsByTrader(int trader_id)
         {
-            List<Ship> arr = Ship.GetShips();
-            return arr.Where<Ship>(s => s.trader_id == trader_id).ToList();
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"select * from [ship] where trader_id = '{trader_id}' ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<Ship> ships = new List<Ship>();
+
+            while (dr.Read())
+            {
+                int
+                    Id = (int)dr[0],
+                    TraderId = (int)dr[2],
+                    AllocatedBirth = (int)dr[4],
+                    AllocatedTerminal = (int)dr[5];
+                string
+                    HIN = (string)dr[1],
+                    NickName = (string)dr[3];
+                
+                ships.Add(new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal));
+            }
+
+            return ships;
         }
     }
 }

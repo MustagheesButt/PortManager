@@ -4,14 +4,22 @@
 }
 
 <div class="container">
-    <form>
+    <form method="post" action="Trader/AddShipFrom">
         <div class="form-group">
             <label for="hin">Ship HIN</label>
             <input type="text" class="form-control" id="hin" placeholder="Enter Ship's HIN">
         </div>
         <div class="form-group">
-            <label for="hin">Ship HIN</label>
-            <input type="text" class="form-control" id="hin" placeholder="Enter Ship's HIN">
+            <label for="hin">Nick Name</label>
+            <input type="text" class="form-control" id="nick_name" placeholder="Enter Nick Name">
+        </div>
+        <div class="form-group">
+            <label for="hin">Allocated Birth</label>
+            <input type="text" class="form-control" id="alloc_birth" placeholder="Enter Allocated Birth">
+        </div>
+        <div class="form-group">
+            <label for="hin">Allocated Terminal</label>
+            <input type="text" class="form-control" id="alloc_term" placeholder="Enter Allocated Terminal">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
