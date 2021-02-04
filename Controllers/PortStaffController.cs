@@ -24,10 +24,19 @@ namespace PortManager.Controllers
             if (Password != ConfirmPassword)
             {
                 TempData["errors"] = "Password and Confirm Password don't match";
-                return Redirect("/Register");
+                return RedirectToAction("/Register");
             }
 
-            User user = new User(FirstName, LastName, Email, Models.User.hash(Password), 2);
+            // check if email exists
+            if (Models.User.GetUserByEmail(Email) != null)
+            {
+                TempData["errors"] = $"{Email} is already registered with us.";
+                return RedirectToAction("/Register");
+            }
+
+            Models.User user = Models.User.GetUserByEmail(Email);
+            
+            Models.User.Add_Trader(FirstName , LastName , Email , Password , 2);
             
             return RedirectToAction("Dashboard", "PortStaff");
         }

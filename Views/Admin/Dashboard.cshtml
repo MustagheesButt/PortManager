@@ -6,9 +6,9 @@
 <div class="container">
     <div id="controls" class="my-3 p-3">
         <div class="d-flex list justify-content-center">
-            <button class="btn btn-success">Add New Staff</button>
-            <button class="btn btn-success">Add New Trader</button>
-            <button class="btn btn-success">Add New Admin</button>
+            <a class="btn btn-success" href="/Admin/AddStaff" >Add New Staff</a>
+            <a class="btn btn-success" href="/Admin/AddTrader">Add New Trader</a>
+            <a class="btn btn-success" href="/Admin/AddAdmin">Add New Admin</a>
         </div>
         <div class="row g-2 justify-content-center">
             <div class="col-md">
@@ -63,9 +63,9 @@
                         <h5 class="card-title">@user.FullName <small class="text-secondary">@user.Email</small></h5>
                         <p class="card-text">@user.Type | @(Array.Exists(new string[] {"Male", "Female"}, e => e == @user.Gender) ?
                         $"{@user.Gender} |" : "") Last updated at @user.UpdatedAt</p>
-                        <a href="#" class="btn btn-primary">Edit</a>
+                        <a href="/Admin/EditUser/@user.id" class="btn btn-primary">Edit</a>
                         <a href="#" class="btn btn-info">View Activity</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a href="/Admin/DeleteUser/@user.id" class="btn btn-danger">Delete</a>
                     </div>
                 </div>
             </div>

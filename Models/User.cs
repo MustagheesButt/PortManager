@@ -223,11 +223,60 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}')";
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{System.DateTime.Now}')";
             SqlCommand cmd = new SqlCommand(query, conn);
             //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
             cmd.ExecuteNonQuery();
             conn.Close();
+        }
+
+        public static void Add_Staff(string fname , string lname , string email , string password , int type)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            // TODO check if user exists in DB. if yes, then throw exception
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{System.DateTime.Now}' )";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public static void Add_Admin(string fname , string lname , string email , string password , int type)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            // TODO check if user exists in DB. if yes, then throw exception
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{System.DateTime.Now}' )";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public static void Edit_User(int user_id , string fname , string lname , string email , string password)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            // TODO check if user exists in DB. if yes, then throw exception
+            string query = $"Update [user] set first_name = '{fname}' , last_name = '{lname}' , email = '{email}' , password_hash = '{password}' , updated_at = '{System.DateTime.Now}' where id = '{user_id}' ";
+            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public static void DeleteUser(int user_id)
+        {
+        
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"delete from [user] where id = '{user_id}' ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        
         }
     }
 }

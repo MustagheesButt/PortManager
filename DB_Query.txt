@@ -8,8 +8,8 @@ CREATE TABLE [dbo].[user] (
     [cnic]          NCHAR (100) NULL,
     [user_type]     INT         NULL,
     [gender]        INT         NULL,
-    [created_at] DATETIME NULL, 
-    [updated_at] DATETIME NULL, 
+    [created_at]    DATETIME    NULL,
+    [updated_at]    DATETIME    NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
