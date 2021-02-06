@@ -7,7 +7,6 @@
 
 <div class="container">
     <form method="post" action="/Trader/AddShipForm">
-        <h1>@Model</h1>
         <div class="form-group">
             <label for="hin">Ship HIN</label>
             <input type="text" class="form-control" name="hin" placeholder="Enter Ship's HIN">
@@ -24,7 +23,6 @@
             <label for="hin">Allocated Terminal</label>
             <input type="text" class="form-control" name="alloc_term" placeholder="Enter Allocated Terminal">
         </div>
-        <input type="hidden" name="trader_id" value="@Model" />
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

@@ -35,6 +35,7 @@ CREATE TABLE [dbo].[item] (
     [id]                  INT         IDENTITY (1, 1) NOT NULL,
     [name]                NCHAR (100) NOT NULL,
     [quantity]            INT NOT NULL,
+    [trader_id]           INT NOT NULL,
     [created_at] DATETIME NULL, 
     [updated_at] DATETIME NULL, 
     PRIMARY KEY CLUSTERED ([Id] ASC)

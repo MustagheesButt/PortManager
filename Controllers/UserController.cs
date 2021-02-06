@@ -19,16 +19,9 @@ namespace PortManager.Controllers
         [HttpPost]
         public IActionResult ForgetForm(string email)
         {
-
-            //var senderEmail = new MailAddress("bcsf16m538@pucit.edu.pk", "Sheiikh993");
-            //var receiverEmail = new MailAddress(receiver, "Receiver");
-            //var password = "Your Email Password here";
-            //var sub = subject;
-            //var body = message;
-
             Models.User user = Models.User.GetUserByEmail(email);
 
-            string from = "bcsf16m538@pucit.edu.pk";
+            string from = "YOUR_EMAIL_HERE";
             string to = email;
 
             MailMessage message = new MailMessage(from , to);
@@ -44,7 +37,7 @@ namespace PortManager.Controllers
             //SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
             smpt.EnableSsl = true;
 
-            NetworkCredential nc = new NetworkCredential("bcsf16m538@pucit.edu.pk", "Sheikh993");
+            NetworkCredential nc = new NetworkCredential("YOUR_EMAIL_HERE", "YOUR_PASSWORD_HERE");
             smpt.UseDefaultCredentials = false;
             smpt.Credentials = nc;
 

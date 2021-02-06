@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Edit Ship";
+    ViewData["sidebar"] = true;
+    Ship ship = (Ship)ViewData["ship"];
+}
+
+<div class="container">
+    <form method="post" action="/Trader/UpdateShip/@ship.id">
+        <div class="form-group">
+            <label for="hin">Ship HIN</label>
+            <input type="text" class="form-control" value="@ship.HIN" name="hin" placeholder="Enter Ship's HIN">
+        </div>
+        <div class="form-group">
+            <label for="hin">Nick Name</label>
+            <input type="text" class="form-control" value="@ship.NickName" name="nick_name" placeholder="Enter Nick Name">
+        </div>
+        <div class="form-group">
+            <label for="hin">Allocated Birth</label>
+            <input type="text" class="form-control" value="@ship.AllocatedBirth" name="alloc_birth" placeholder="Enter Allocated Birth">
+        </div>
+        <div class="form-group">
+            <label for="hin">Allocated Terminal</label>
+            <input type="text" class="form-control" value="@ship.AllocatedTerminal" name="alloc_term" placeholder="Enter Allocated Terminal">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

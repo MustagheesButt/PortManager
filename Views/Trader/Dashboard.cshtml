@@ -6,7 +6,6 @@
 @using PortManager.Models;
 
 <div class="container">
-    <h1>@Model</h1>
     <div id="controls" class="my-3 p-3">
         <div class="d-flex list justify-content-center">
             <a href="/Trader/AddShip/@Model" class="btn btn-success">Add New Ship</a>
@@ -72,21 +71,21 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         @ship.NickName <small class="text-secondary">@ship.HIN</small> @if (ship.CustomDuty() == 0)
-                                {
+                        {
                         <span class="badge bg-success float-end">Duty Paid</span>
-                                }
-                                else
-                                {
+                        }
+                        else
+                        {
                         <span class="badge bg-warning float-end">Duty Due</span>
-                                }
+                        }
                     </h5>
                     <p class="card-text">
                         @PortManager.Models.User.GetUser(ship.trader_id).FullName | Last updated at
                         @ship.UpdatedAt
                     </p>
-                    <a href="#" class="btn btn-primary">Edit</a>
+                    <a href="/Ship/Edit/@ship.id" class="btn btn-primary">Edit</a>
                     <a href="#" class="btn btn-info">View Activity</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
+                    <a href="/Ship/Delete/@ship.id" class="btn btn-danger">Delete</a>
                 </div>
             </div>
         </div>
