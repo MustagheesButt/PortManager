@@ -86,6 +86,17 @@ namespace PortManager.Models
             conn.Close();
         }
 
+        public static void DeleteById(int id)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"delete from [ship] WHERE id = {id}";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
         public static List<Ship> GetShips()
         {
             SqlConnection conn = new SqlConnection(connString);

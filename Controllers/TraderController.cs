@@ -34,10 +34,10 @@ namespace PortManager.Controllers
                 TempData["errors"] = $"{Email} is already registered with us.";
                 return Redirect("/Register");
             }
-
-            Models.User user = Models.User.GetUserByEmail(Email);
             
             Models.User.Add_Trader(FirstName , LastName , Email , Password , 1);
+
+            Models.User user = Models.User.GetUserByEmail(Email);
 
             HttpContext.Session.SetInt32("user_id", user.id);
 
@@ -70,17 +70,14 @@ namespace PortManager.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet("Trader/AddShip/{trader_id}")]
-        public IActionResult AddShip(int trader_id)
-        {
-            return View("AddShip" , trader_id);
-        }
-
         [HttpPost]
-        public IActionResult AddShipForm(string hin , string nick_name , int alloc_birth , int alloc_term , int trader_id)
+        public IActionResult AddShipForm(string hin , string nick_name , int alloc_birth , int alloc_term)
         {
-            Ship add_ship = new Ship(hin , trader_id , nick_name , alloc_birth , alloc_term);
-            PortManager.Models.Ship.AddShip(add_ship);
+            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+
+            Ship ship = new Ship(hin , trader_id , nick_name , alloc_birth , alloc_term);
+            Ship.AddShip(ship);
+
             return RedirectToAction("Dashboard", "Trader");
         }
 

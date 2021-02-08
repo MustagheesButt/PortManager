@@ -1,10 +1,20 @@
 <aside class="col-md-2 bg-dark">
     <nav class="nav flex-column mt-5 text-light">
-        @if ((string)ViewData["Title"] == "Trader Dashboard") {
+        @if (this.ViewContext.RouteData.Values["controller"].ToString() == "Trader")
+        {
             <a class="nav-link" href="/Trader">Ships</a>
+            <a class="nav-link" href="/Trader/Items">Items</a>
             <a class="nav-link" href="/Trader/CustomDuties">Custom Duties</a>
             <a class="nav-link" href="/Trader/Settings">Settings</a>
-        } else {
+        }
+        else if (this.ViewContext.RouteData.Values["controller"].ToString() == "Ship")
+        {
+            <a class="nav-link" href="/Ship">Ships</a>
+            <a class="nav-link" href="/Ship/Items">Items</a>
+            <a class="nav-link" href="/Ship/CustomDuties">Custom Duties</a>
+        }
+        else
+        {
             <a class="nav-link active" aria-current="page" href="/Admin">Users</a>
             <a class="nav-link" href="/Admin/Ships">Ships</a>
             <a class="nav-link" href="/Admin/CustomDuties">Custom Duties</a>
