@@ -30,6 +30,19 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
+        public Ship(int id , string HIN, string NickName, int AllocatedBirth, int AllocatedTerminal)
+        {
+            this.id = id ;
+            this.HIN        = HIN;
+            this.NickName   = NickName;
+            
+            this.AllocatedBirth    = AllocatedBirth;
+            this.AllocatedTerminal = AllocatedTerminal;
+
+            //this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+        }
+
         public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal)
         {
             this.id         = id;
@@ -44,9 +57,8 @@ namespace PortManager.Models
             this.UpdatedAt = DateTime.Now;
         }
 
-        public Ship(string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal)
+        public Ship(string HIN, int trader_id ,string NickName, int AllocatedBirth, int AllocatedTerminal)
         {
-            this.id         = id;
             this.HIN        = HIN;
             this.trader_id  = trader_id;
             this.NickName   = NickName;
@@ -170,6 +182,30 @@ namespace PortManager.Models
             }
 
             return ships;
+        }
+
+        public static void DeleteShip(int ship_id)
+        {
+        
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"delete from [ship] where id = '{ship_id}' ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        
+        }
+
+        public static void EditShip(Ship ship)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            // TODO check if ship exists in DB. if yes, then throw exception
+            string query = $"Update ship set hin = '{ship.HIN}' , nick_name = '{ship.NickName}' , allocated_birth = '{ship.AllocatedBirth}' , allocated_terminal = '{ship.AllocatedTerminal}' , updated_at = '{ship.UpdatedAt}' where id = '{ship.id}' ";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
     }
 }

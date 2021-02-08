@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    ViewData["sidebar"] = true;
+}
+
+<div class="bg-dark row justify-content-center"
+     style="background-image: url(images/port-lights.jpg); background-size: cover;">
+    <div class="col-sm-4" style="margin: 7rem 0;">
+        <div class="card" style="background-color: #FFFFFFAA; backdrop-filter: blur(3px);">
+            <div class="card-body">
+                <h5 class="card-title text-center">Add Trader</h5>
+
+                <form action="/Admin/AddAdminForm" method="POST">
+                    <div class="mb-3">
+                        <label for="FirstName" class="form-label">First Name</label>
+                        <input type="text" name="FirstName" class="form-control" id="FirstName"
+                               placeholder="First Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="LastName" class="form-label">Last Name</label>
+                        <input type="text" name="LastName" class="form-control" id="LastName"
+                               placeholder="Last Name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email Address</label>
+                        <input type="email" name="Email" class="form-control" id="emailInput"
+                               placeholder="name@example.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password</label>
+                        <input type="password" name="Password" class="form-control" id="passwordInput"
+                               placeholder="Password" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" class="form-control" id="confirmPasswordInput"
+                               placeholder="Retype Password" />
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+

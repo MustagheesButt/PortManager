@@ -42,5 +42,139 @@ namespace PortManager.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet("Admin/AddTrader")]
+        public IActionResult AddTrader()
+        {
+        
+            return View("AddTrader");
+
+        }
+
+        [HttpGet("Admin/AddStaff")]
+        public IActionResult AddStaff()
+        {
+        
+            return View("AddStaff");
+
+        }
+
+        [HttpGet("Admin/AddAdmin")]
+        public IActionResult AddAdmin()
+        {
+        
+            return View("AddAdmin");
+
+        }
+
+        [HttpGet("Admin/EditUser/{user_id}")]
+        public IActionResult EditUser(int user_id)
+        {
+        
+            return View("EditUser" , user_id);
+
+        }
+
+        [HttpPost]
+        public IActionResult AddTraderForm(String FirstName, String LastName, String Email, String Password, String ConfirmPassword)
+        {
+            if (Password != ConfirmPassword)
+            {
+                TempData["errors"] = "Password and Confirm Password don't match";
+                return RedirectToAction("AddTrader", "Admin");
+            }
+
+            // check if email exists
+            if (Models.User.GetUserByEmail(Email) != null)
+            {
+                TempData["errors"] = $"{Email} is already registered with us.";
+                return RedirectToAction("AddTrader", "Admin");
+            }
+
+            Models.User user = Models.User.GetUserByEmail(Email);
+            
+            Models.User.Add_Trader(FirstName , LastName , Email , Password , 1);
+
+            return RedirectToAction("Dashboard", "Admin");
+
+        }
+
+        [HttpPost]
+        public IActionResult AddStaffForm(String FirstName, String LastName, String Email, String Password, String ConfirmPassword)
+        {
+            if (Password != ConfirmPassword)
+            {
+                TempData["errors"] = "Password and Confirm Password don't match";
+                return RedirectToAction("AddTrader", "Admin");
+            }
+
+            // check if email exists
+            if (Models.User.GetUserByEmail(Email) != null)
+            {
+                TempData["errors"] = $"{Email} is already registered with us.";
+                return RedirectToAction("AddTrader", "Admin");
+            }
+
+            Models.User user = Models.User.GetUserByEmail(Email);
+            
+            Models.User.Add_Trader(FirstName , LastName , Email , Password , 2);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult AddAdminForm(String FirstName, String LastName, String Email, String Password, String ConfirmPassword)
+        {
+            if (Password != ConfirmPassword)
+            {
+                TempData["errors"] = "Password and Confirm Password don't match";
+                return RedirectToAction("AddTrader", "Admin");
+            }
+
+            // check if email exists
+            if (Models.User.GetUserByEmail(Email) != null)
+            {
+                TempData["errors"] = $"{Email} is already registered with us.";
+                return RedirectToAction("AddTrader", "Admin");
+            }
+
+            Models.User user = Models.User.GetUserByEmail(Email);
+            
+            Models.User.Add_Admin(FirstName , LastName , Email , Password , 0);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult EditUserForm(int user_id , String FirstName, String LastName, String Email, String Password, String ConfirmPassword)
+        {
+            if (Password != ConfirmPassword)
+            {
+                TempData["errors"] = "Password and Confirm Password don't match";
+                return View("EditUser", user_id);
+            }
+
+            // check if email exists
+            if (Models.User.GetUserByEmail(Email) != null)
+            {
+                TempData["errors"] = $"{Email} is already registered with us.";
+                return View("EditUser", user_id);
+            }
+
+            //Models.User user = Models.User.GetUserByEmail(Email);
+            
+            Models.User.Edit_User(user_id ,FirstName , LastName , Email , Password);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        [HttpGet("Admin/DeleteUser/{user_id}")]
+        public IActionResult DeleteUser(int user_id)
+        {
+           
+            PortManager.Models.User.DeleteUser(user_id);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
     }
 }
