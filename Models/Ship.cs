@@ -75,12 +75,23 @@ namespace PortManager.Models
             return 5000;
         }
 
-        public static void AddShip(Ship ship)
+        public static void Add(Ship ship)
         {
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
             string query = $"insert into [ship] (hin, trader_id , nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.trader_id}' ,'{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', '{ship.CreatedAt}', '{ship.UpdatedAt}')";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public static void Update(Ship ship)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+            // TODO check if ship exists in DB. if yes, then throw exception
+            string query = $"Update ship set hin = '{ship.HIN}' , nick_name = '{ship.NickName}' , allocated_birth = '{ship.AllocatedBirth}' , allocated_terminal = '{ship.AllocatedTerminal}' , updated_at = '{ship.UpdatedAt}' where id = '{ship.id}' ";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.ExecuteNonQuery();
             conn.Close();
@@ -134,8 +145,6 @@ namespace PortManager.Models
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader dr = cmd.ExecuteReader();
 
-            
-
             if (dr.Read())
             {
                 int
@@ -147,7 +156,7 @@ namespace PortManager.Models
                     HIN = (string)dr[1],
                     NickName = (string)dr[3];
                 
-                Ship ship = new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal);
+                Ship ship = new Ship(Id, HIN.Trim(), TraderId, NickName.Trim(), AllocatedBirth, AllocatedTerminal);
                 return ship;
             }else{
                 
@@ -182,30 +191,6 @@ namespace PortManager.Models
             }
 
             return ships;
-        }
-
-        public static void DeleteShip(int ship_id)
-        {
-        
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
-            string query = $"delete from [ship] where id = '{ship_id}' ";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.ExecuteNonQuery();
-            conn.Close();
-        
-        }
-
-        public static void EditShip(Ship ship)
-        {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-            // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"Update ship set hin = '{ship.HIN}' , nick_name = '{ship.NickName}' , allocated_birth = '{ship.AllocatedBirth}' , allocated_terminal = '{ship.AllocatedTerminal}' , updated_at = '{ship.UpdatedAt}' where id = '{ship.id}' ";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.ExecuteNonQuery();
-            conn.Close();
         }
     }
 }

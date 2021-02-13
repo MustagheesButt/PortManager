@@ -10,8 +10,17 @@ using PortManager.Models;
 
 namespace PortManager.Controllers
 {
-    public class ShipController : Controller
+    public class ItemController : Controller
     {
+        [Route("/Item")]
+        public IActionResult Dashboard()
+        {
+            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            ViewData["items"] = Item.GetAllByTrader(trader_id);
+
+            return View("Dashboard", trader_id);
+        }
+
         public IActionResult Add()
         {
             return View();
@@ -31,8 +40,8 @@ namespace PortManager.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Ship ship = Ship.GetShip(id);
-            ViewData["ship"] = ship;
+            Item item = Item.GetOne(id);
+            ViewData["item"] = item;
 
             return View();
         }
@@ -48,7 +57,7 @@ namespace PortManager.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            Ship.DeleteById(id);
+            Item.DeleteById(id);
             return RedirectToAction("Dashboard", "Trader");
         }
     }

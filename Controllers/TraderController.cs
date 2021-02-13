@@ -53,53 +53,10 @@ namespace PortManager.Controllers
             return View("Dashboard" , trader_id);
         }
 
-        public IActionResult AddShip()
-        {
-            return View();
-        }
-
-        [HttpGet("Trader/UpdateShip/{ship_id}")]
-        public IActionResult UpdateShip(int ship_id)
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        [HttpPost]
-        public IActionResult AddShipForm(string hin , string nick_name , int alloc_birth , int alloc_term)
-        {
-            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
-
-            Ship ship = new Ship(hin , trader_id , nick_name , alloc_birth , alloc_term);
-            Ship.AddShip(ship);
-
-            return RedirectToAction("Dashboard", "Trader");
-        }
-
-        [HttpGet("Trader/DeleteShip/{ship_id}")]
-        public IActionResult DeleteShip(int ship_id)
-        {
-            PortManager.Models.Ship.DeleteShip(ship_id);
-            return RedirectToAction("Dashboard", "Trader");
-        }
-
-        [HttpGet("Trader/EditShip/{ship_id}")]
-        public IActionResult EditShip(int ship_id)
-        {
-            return View("EditShip" , ship_id);
-        }
-
-        [HttpPost]
-        public IActionResult EditShipForm(string hin , string nick_name , int alloc_birth , int alloc_term , int ship_id )
-        {
-            Ship ship = new Ship(ship_id ,hin , nick_name , alloc_birth , alloc_term);
-            PortManager.Models.Ship.EditShip(ship);
-            return RedirectToAction("Dashboard", "Trader");
         }
     }
 }

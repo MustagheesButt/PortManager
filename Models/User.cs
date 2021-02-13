@@ -172,10 +172,10 @@ namespace PortManager.Models
             return users;
         }
 
-        public static User GetUser(int user_id)
+        public static User GetOne(int id)
         {
             List<User> arr = User.GetUsers();
-            return arr.Find(e => e.id == user_id);
+            return arr.Find(e => e.id == id);
         }
 
         public static User GetUserByEmail(string email)
@@ -223,7 +223,7 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{System.DateTime.Now}')";
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{DateTime.Now}')";
             SqlCommand cmd = new SqlCommand(query, conn);
             //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
             cmd.ExecuteNonQuery();
@@ -235,7 +235,7 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{System.DateTime.Now}' )";
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{DateTime.Now}' )";
             SqlCommand cmd = new SqlCommand(query, conn);
             //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
             cmd.ExecuteNonQuery();
@@ -266,9 +266,8 @@ namespace PortManager.Models
             conn.Close();
         }
 
-        public static void DeleteUser(int user_id)
+        public static void Delete(int user_id)
         {
-        
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
@@ -276,7 +275,6 @@ namespace PortManager.Models
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.ExecuteNonQuery();
             conn.Close();
-        
         }
     }
 }

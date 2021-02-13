@@ -7,6 +7,8 @@
     Boolean HasSidebar = false;
     if (ViewData.ContainsKey("sidebar") && (Boolean)ViewData["sidebar"])
         HasSidebar = true;
+
+    @using Microsoft.AspNetCore.Http;
 }
 
 <!DOCTYPE html>
@@ -33,11 +35,18 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (Array.Exists(protected_pages, e => e == ViewData["Title"].ToString()))
                         {
-                            <li class="nav-item">
+                        <li class="nav-item">
+                            @if (PortManager.Models.User.GetOne((int)Context.Session.GetInt32("user_id")).Type == "Admin")
+                            {
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
-                            </li>
+                            }
+                            else
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Trader" asp-action="Dashboard">Dashboard</a>
+                            }
+                        </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="Login" >Logout</a>
+                                <a class="nav-link text-dark" href="/Login" >Logout</a>
                             </li>
                         }
                         else

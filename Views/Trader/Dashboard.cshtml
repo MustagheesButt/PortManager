@@ -8,7 +8,7 @@
 <div class="container">
     <div id="controls" class="my-3 p-3">
         <div class="d-flex list justify-content-center">
-            <a href="/Trader/AddShip/@Model" class="btn btn-success">Add New Ship</a>
+            <a href="/Ship/Add" class="btn btn-success">Add New Ship</a>
         </div>
         <div class="row g-2 justify-content-center">
             <div class="col-md">
@@ -80,7 +80,7 @@
                         }
                     </h5>
                     <p class="card-text">
-                        @PortManager.Models.User.GetUser(ship.trader_id).FullName | Last updated at
+                        @PortManager.Models.User.GetOne(ship.trader_id).FullName | Last updated at
                         @ship.UpdatedAt
                     </p>
                     <a href="/Ship/Edit/@ship.id" class="btn btn-primary">Edit</a>

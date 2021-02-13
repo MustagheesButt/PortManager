@@ -172,7 +172,7 @@ namespace PortManager.Controllers
         public IActionResult DeleteUser(int user_id)
         {
            
-            PortManager.Models.User.DeleteUser(user_id);
+            PortManager.Models.User.Delete(user_id);
 
             return RedirectToAction("Dashboard", "Admin");
         }

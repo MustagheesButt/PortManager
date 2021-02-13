@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Add New Item";
+    ViewData["sidebar"] = true;
+
+    @using Microsoft.AspNetCore.Http;
+}
+
+@using PortManager.Models;
+
+<div class="container">
+    <form method="post" action="/Item/Create">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" placeholder="Enter Item's Name">
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" class="form-control" name="quantity" placeholder="Enter Quantity">
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" name="price" placeholder="Enter Unit Price">
+        </div>
+        <div class="form-group">
+            <label for="hin">Ship</label>
+            <select class="form-control" name="ship">
+                @foreach (Ship ship in Ship.GetShipsByTrader((int)Context.Session.GetInt32("user_id")))
+                {
+                    <option>@ship.NickName</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
