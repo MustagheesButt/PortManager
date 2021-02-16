@@ -46,33 +46,25 @@ namespace PortManager.Controllers
         [HttpGet("Admin/AddTrader")]
         public IActionResult AddTrader()
         {
-        
             return View("AddTrader");
-
         }
 
         [HttpGet("Admin/AddStaff")]
         public IActionResult AddStaff()
         {
-        
             return View("AddStaff");
-
         }
 
         [HttpGet("Admin/AddAdmin")]
         public IActionResult AddAdmin()
         {
-        
             return View("AddAdmin");
-
         }
 
         [HttpGet("Admin/EditUser/{user_id}")]
         public IActionResult EditUser(int user_id)
         {
-        
             return View("EditUser" , user_id);
-
         }
 
         [HttpPost]
@@ -90,10 +82,8 @@ namespace PortManager.Controllers
                 TempData["errors"] = $"{Email} is already registered with us.";
                 return RedirectToAction("AddTrader", "Admin");
             }
-
-            Models.User user = Models.User.GetUserByEmail(Email);
             
-            Models.User.Add_Trader(FirstName , LastName , Email , Password , 1);
+            Models.User.Add_User(new Models.User(-1, FirstName, LastName, Email, 0, PasswordHash: Password, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now));
 
             return RedirectToAction("Dashboard", "Admin");
 
@@ -114,10 +104,8 @@ namespace PortManager.Controllers
                 TempData["errors"] = $"{Email} is already registered with us.";
                 return RedirectToAction("AddTrader", "Admin");
             }
-
-            Models.User user = Models.User.GetUserByEmail(Email);
             
-            Models.User.Add_Trader(FirstName , LastName , Email , Password , 2);
+            Models.User.Add_User(new Models.User(-1, FirstName, LastName, Email, 2, PasswordHash: Password, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now));
 
             return RedirectToAction("Dashboard", "Admin");
         }
@@ -137,10 +125,8 @@ namespace PortManager.Controllers
                 TempData["errors"] = $"{Email} is already registered with us.";
                 return RedirectToAction("AddTrader", "Admin");
             }
-
-            Models.User user = Models.User.GetUserByEmail(Email);
             
-            Models.User.Add_Admin(FirstName , LastName , Email , Password , 0);
+            Models.User.Add_User(new Models.User(-1, FirstName, LastName, Email, 0, PasswordHash: Password, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now));
 
             return RedirectToAction("Dashboard", "Admin");
         }

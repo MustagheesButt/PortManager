@@ -64,73 +64,18 @@ namespace PortManager.Models
             }
         }
 
-        // use this at registration
-        public User(string FirstName, string LastName, string Email, string PasswordHash, int Type )
+        public User(int id , string FirstName, string LastName, string Email, int Type, int Gender=0, string PasswordHash=null, DateTime? CreatedAt=null, DateTime? UpdatedAt=null)
         {
             this.id = id ;
             this.FirstName    = FirstName;
             this.LastName     = LastName;
             this.Email        = Email;
             this.PasswordHash = PasswordHash;
-            this._Gender      = 0;
+            this._Gender      = Gender;
             this._Type        = Type;
 
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public User(int id , string FirstName, string LastName, string Email, string PasswordHash, int Type )
-        {
-            this.id = id ;
-            this.FirstName    = FirstName;
-            this.LastName     = LastName;
-            this.Email        = Email;
-            this.PasswordHash = PasswordHash;
-            this._Gender      = 0;
-            this._Type        = Type;
-
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public User(int id, string FirstName, string LastName, string Email, int Type)
-        {
-            this.id        = id;
-            this.FirstName = FirstName;
-            this.LastName  = LastName;
-            this.Email     = Email;
-            //this._Gender   = Gender;
-            this._Type     = Type;
-
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public User(int id, string FirstName, string LastName, string Email, int Gender, int Type)
-        {
-            this.id        = id;
-            this.FirstName = FirstName;
-            this.LastName  = LastName;
-            this.Email     = Email;
-            this._Gender   = Gender;
-            this._Type     = Type;
-
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public User(int id, string FirstName, string LastName, string Email, string PasswordHash, int Gender, int Type)
-        {
-            this.id = id;
-            this.FirstName = FirstName;
-            this.LastName = LastName;
-            this.Email = Email;
-            this.PasswordHash = PasswordHash;
-            this._Gender = Gender;
-            this._Type = Type;
-
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
+            this.CreatedAt = (DateTime)CreatedAt;
+            this.UpdatedAt = (DateTime)UpdatedAt;
         }
 
         public static void Add_User(User obj)
@@ -160,13 +105,16 @@ namespace PortManager.Models
             {
                 int
                     Id = (int)dr[0],
-                    UserType = (int)dr[6];
-                    //Gender = (int)dr[7];
+                    UserType = (int)dr[6],
+                    Gender = (int)dr[7];
                 string
                     FirstName = dr[1].ToString(),
                     LastName = dr[2].ToString(),
                     Email = dr[3].ToString();
-                users.Add(new User(Id, FirstName, LastName, Email, UserType));
+                DateTime
+                    CreatedAt = (DateTime)dr[8],
+                    UpdatedAt = (DateTime)dr[9];
+                users.Add(new User(Id, FirstName, LastName, Email, UserType, Gender, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt));
             }
 
             return users;
@@ -183,30 +131,26 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
-            string query = $"select * from [user] where  email = '{email}'  ";
+            string query = $"select * from [user] where  email = '{email}'";
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader dr = cmd.ExecuteReader();
 
             if (dr.Read())
             {
-                User user = new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[3], (string)dr[4], (int)dr[6]);
+                int
+                    Id = (int)dr[0],
+                    UserType = (int)dr[6],
+                    Gender = (int)dr[7];
+                string
+                    FirstName = dr[1].ToString(),
+                    LastName = dr[2].ToString(),
+                    Email = dr[3].ToString(),
+                    PasswordHash = dr[4].ToString();
+                DateTime
+                    CreatedAt = (DateTime)dr[8],
+                    UpdatedAt = (DateTime)dr[9];
+                User user = new User(Id, FirstName, LastName, Email, UserType, Gender, PasswordHash, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt);
                 return user ;
-            }
-            else { return null; }
-        }
-
-        public static User GetUserByEmailAndPassword(string email , string password)
-        {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
-            string query = $"select * from [user] where  email = '{email}' and  password_hash = '{password}'  ";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.Read())
-            {
-                return new User((int)dr[0], (string)dr[1], (string)dr[2], (string)dr[3], (string)dr[4] ,  (int)dr[6]);
             }
             else { return null; }
         }
@@ -216,42 +160,6 @@ namespace PortManager.Models
             byte[] data = System.Text.Encoding.UTF8.GetBytes(Password);
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
             return System.Text.Encoding.UTF8.GetString(data);
-        }
-
-        public static void Add_Trader(string fname , string lname , string email , string password , int type)
-        {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-            // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{DateTime.Now}')";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
-            cmd.ExecuteNonQuery();
-            conn.Close();
-        }
-
-        public static void Add_Staff(string fname , string lname , string email , string password , int type)
-        {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-            // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{DateTime.Now}' )";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
-            cmd.ExecuteNonQuery();
-            conn.Close();
-        }
-
-        public static void Add_Admin(string fname , string lname , string email , string password , int type)
-        {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-            // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, user_type , created_at) values ('{fname}', '{lname}', '{email}', '{password}' , '{type}' , '{System.DateTime.Now}' )";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
-            cmd.ExecuteNonQuery();
-            conn.Close();
         }
 
         public static void Edit_User(int user_id , string fname , string lname , string email , string password)

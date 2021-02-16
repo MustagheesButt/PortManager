@@ -35,7 +35,7 @@ namespace PortManager.Controllers
                 return Redirect("/Register");
             }
             
-            Models.User.Add_Trader(FirstName , LastName , Email , Password , 1);
+            Models.User.Add_User(new Models.User(-1, FirstName, LastName, Email, 1, PasswordHash: Password, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now));
 
             Models.User user = Models.User.GetUserByEmail(Email);
 

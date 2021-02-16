@@ -33,10 +33,8 @@ namespace PortManager.Controllers
                 TempData["errors"] = $"{Email} is already registered with us.";
                 return RedirectToAction("/Register");
             }
-
-            Models.User user = Models.User.GetUserByEmail(Email);
             
-            Models.User.Add_Trader(FirstName , LastName , Email , Password , 2);
+            Models.User.Add_User(new Models.User(-1, FirstName, LastName, Email, 2, PasswordHash: Password, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now));
             
             return RedirectToAction("Dashboard", "PortStaff");
         }
@@ -44,7 +42,7 @@ namespace PortManager.Controllers
         [Route("/PortStaff")]
         public IActionResult Dashboard()
         {
-            ViewData["ships"] = Models.Ship.GetShipsByTrader(1);
+            ViewData["ships"] = Models.Ship.GetShips();
             return View();
         }
 
