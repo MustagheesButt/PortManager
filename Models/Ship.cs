@@ -80,8 +80,10 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"insert into [ship] (hin, trader_id , nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.trader_id}' ,'{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', '{ship.CreatedAt}', '{ship.UpdatedAt}')";
+            string query = $"insert into [ship] (hin, trader_id , nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.trader_id}' ,'{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@CreatedAt", ship.CreatedAt);
+            cmd.Parameters.AddWithValue("@UpdatedAt", ship.UpdatedAt);
             cmd.ExecuteNonQuery();
             conn.Close();
         }

@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace PortManager.Models
 {
@@ -38,12 +34,16 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
-            string query = $"insert into [item] (name, quantity, price, currency, trader_id, created_at, updated_at) values ('{item.Name}', '{item.Quantity}', '{item.Price}', '{item.Currency}', '{item.trader_id}', '{item.CreatedAt}', '{item.UpdatedAt}')";
+            string query = $"insert into [item] (name, quantity, price, currency, trader_id, created_at, updated_at) values ('{item.Name}', '{item.Quantity}', '{item.Price}', '{item.Currency}', '{item.trader_id}', @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+            cmd.Parameters.AddWithValue("@UpdatedAt", obj.UpdatedAt);
             int id = (int)cmd.ExecuteScalar();
 
-            string query2 = $"insert into [items_ships] (item_id, ship_id, created_at, updated_at) values ('{id}', '{ship_id}', '{DateTime.Now}', '{DateTime.Now}')";
+            string query2 = $"insert into [items_ships] (item_id, ship_id, created_at, updated_at) values ('{id}', '{ship_id}', @CreatedAt, @UpdatedAt)";
             cmd = new SqlCommand(query2, conn);
+            cmd.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+            cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
             cmd.ExecuteNonQuery();
 
             conn.Close();

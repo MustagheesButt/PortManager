@@ -27,14 +27,14 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term)
+        public IActionResult Create(string name, int quantity, int price, int ship_id)
         {
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
 
-            Ship ship = new Ship(hin, trader_id, nick_name, alloc_birth, alloc_term);
-            Ship.Add(ship);
+            Item item = new Item(-1, name, trader_id, quantity, price, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
+            Item.Add(item, ship_id);
 
-            return RedirectToAction("Dashboard", "Trader");
+            return RedirectToAction("Dashboard", "Item");
         }
 
         [HttpGet]

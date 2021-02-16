@@ -83,8 +83,10 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"insert into [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) values ('{obj.FirstName}', '{obj.LastName}', '{obj.Email}', '{obj.PasswordHash}' , '{obj.CNIC}', {obj._Type}, '{obj._Gender}', '{obj.CreatedAt}', '{obj.UpdatedAt}')";
+            string query = $"insert into [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) values ('{obj.FirstName}', '{obj.LastName}', '{obj.Email}', '{obj.PasswordHash}' , '{obj.CNIC}', {obj._Type}, '{obj._Gender}', @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
+            cmd.Parameters.AddWithValue("@UpdatedAt", obj.UpdatedAt);
             //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
             cmd.ExecuteNonQuery();
             conn.Close();

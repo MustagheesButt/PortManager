@@ -23,10 +23,10 @@
         </div>
         <div class="form-group">
             <label for="hin">Ship</label>
-            <select class="form-control" name="ship">
+            <select class="form-control" name="ship_id">
                 @foreach (Ship ship in Ship.GetShipsByTrader((int)Context.Session.GetInt32("user_id")))
                 {
-                    <option>@ship.NickName</option>
+                    <option value="@ship.id">@ship.NickName</option>
                 }
             </select>
         </div>
