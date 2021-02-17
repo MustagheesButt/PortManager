@@ -104,3 +104,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('input[name=FirstName], input[name=LastName]').forEach(function (element) {
+        element.addEventListener('keydown', function (e) {
+            if (e.keyCode >= 48 && e.keyCode <= 57) {
+                e.preventDefault()
+                return false
+            }
+        })
+    })
+</script>

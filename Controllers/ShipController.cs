@@ -38,9 +38,14 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string hin, string nick_name, int alloc_birth, int alloc_term, int ship_id)
+        public IActionResult Update(int id, string hin, string nick_name, int alloc_birth, int alloc_term)
         {
-            Ship ship = new Ship(ship_id, hin, nick_name, alloc_birth, alloc_term);
+            Ship ship = Ship.GetShip(id);
+            ship.HIN = hin;
+            ship.NickName = nick_name;
+            ship.AllocatedBirth = alloc_birth;
+            ship.AllocatedTerminal = alloc_term;
+     
             Ship.Update(ship);
             return RedirectToAction("Dashboard", "Trader");
         }
