@@ -35,7 +35,7 @@ CREATE TABLE [dbo].[item] (
     [id]                  INT         IDENTITY (1, 1) NOT NULL,
     [name]                VARCHAR (255) NOT NULL,
     [quantity]            INT NOT NULL,
-    [price]               DECIMAL(4,2) NOT NULL DEFAULT 0,
+    [price]               DECIMAL NOT NULL DEFAULT 0,
     [currency]            VARCHAR(10) NOT NULL DEFAULT 'PKR',
     [trader_id]           INT NOT NULL,
     [created_at] DATETIME NULL,

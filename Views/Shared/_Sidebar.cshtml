@@ -1,17 +1,15 @@
+@using Microsoft.AspNetCore.Http;
+@{ 
+    PortManager.Models.User user = PortManager.Models.User.GetOne((int)Context.Session.GetInt32("user_id"));
+}
 <aside class="col-md-2 bg-dark">
     <nav class="nav flex-column mt-5 text-light">
-        @if (this.ViewContext.RouteData.Values["controller"].ToString() == "Trader")
+        @if (user.Type == "Trader")
         {
             <a class="nav-link" href="/Trader">Ships</a>
             <a class="nav-link" href="/Item">Items</a>
             <a class="nav-link" href="/Trader/CustomDuties">Custom Duties</a>
             <a class="nav-link" href="/Trader/Settings">Settings</a>
-        }
-        else if (this.ViewContext.RouteData.Values["controller"].ToString() == "Ship")
-        {
-            <a class="nav-link" href="/Ship">Ships</a>
-            <a class="nav-link" href="/Ship/Items">Items</a>
-            <a class="nav-link" href="/Ship/CustomDuties">Custom Duties</a>
         }
         else
         {

@@ -34,10 +34,13 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
-            string query = $"insert into [item] (name, quantity, price, currency, trader_id, created_at, updated_at) values ('{item.Name}', '{item.Quantity}', '{item.Price}', '{item.Currency}', '{item.trader_id}', @CreatedAt, @UpdatedAt)";
+            string query = $"INSERT INTO [item] (name, quantity, price, currency, trader_id, created_at, updated_at) OUTPUT Inserted.ID VALUES('{item.Name}', @Quantity, @Price, '{item.Currency}', @TraderId, @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
-            cmd.Parameters.AddWithValue("@UpdatedAt", obj.UpdatedAt);
+            cmd.Parameters.AddWithValue("@Quantity",  item.Quantity);
+            cmd.Parameters.AddWithValue("@Price",     item.Price);
+            cmd.Parameters.AddWithValue("@TraderId",  item.trader_id);
+            cmd.Parameters.AddWithValue("@CreatedAt", item.CreatedAt);
+            cmd.Parameters.AddWithValue("@UpdatedAt", item.UpdatedAt);
             int id = (int)cmd.ExecuteScalar();
 
             string query2 = $"insert into [items_ships] (item_id, ship_id, created_at, updated_at) values ('{id}', '{ship_id}', @CreatedAt, @UpdatedAt)";
@@ -54,8 +57,9 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"Update item set name = '{item.Name}' , quantity = '{item.Quantity}' , price = '{item.Price}', currency = '{item.Currency}', updated_at = '{DateTime.Now}' where id = '{item.id}' ";
+            string query = $"Update item set name = '{item.Name}' , quantity = '{item.Quantity}' , price = '{item.Price}', currency = '{item.Currency}', updated_at = @UpdatedAt where id = '{item.id}'";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@UpdatedAt", item.UpdatedAt);
             cmd.ExecuteNonQuery();
             conn.Close();
         }
@@ -87,8 +91,9 @@ namespace PortManager.Models
                 int
                     Id = (int)dr[0],
                     TraderId = (int)dr[5],
-                    Quantity = (int)dr[2],
-                    Price = (int)dr[3];
+                    Quantity = (int)dr[2];
+                Decimal
+                    Price = (Decimal)dr[3];
                 string
                     Name = (string)dr[1],
                     Currency = (string)dr[4];
@@ -116,8 +121,9 @@ namespace PortManager.Models
                 int
                     Id = (int)dr[0],
                     TraderId = (int)dr[5],
-                    Quantity = (int)dr[2],
-                    Price = (int)dr[3];
+                    Quantity = (int)dr[2];
+                Decimal
+                    Price = (Decimal)dr[3];
                 string
                     Name = (string)dr[1],
                     Currency = (string)dr[4];
@@ -147,8 +153,9 @@ namespace PortManager.Models
                 int
                     Id = (int)dr[0],
                     TraderId = (int)dr[5],
-                    Quantity = (int)dr[2],
-                    Price = (int)dr[3];
+                    Quantity = (int)dr[2];
+                Decimal
+                    Price = (Decimal)dr[3];
                 string
                     Name = (string)dr[1],
                     Currency = (string)dr[4];

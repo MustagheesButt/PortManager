@@ -47,11 +47,21 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string hin, string nick_name, int alloc_birth, int alloc_term, int ship_id)
+        public IActionResult Update(int id, string name, int quantity, int price, int ship_id)
         {
-            Ship ship = new Ship(ship_id, hin, nick_name, alloc_birth, alloc_term);
-            Ship.Update(ship);
-            return RedirectToAction("Dashboard", "Trader");
+            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+
+            // TODO verify item belongs to the current_user/trader
+
+            Item item = Item.GetOne(id);
+            item.Name = name;
+            item.Quantity = quantity;
+            item.Price = price;
+            item.UpdatedAt = DateTime.Now;
+
+            Item.Update(item);
+
+            return RedirectToAction("Dashboard", "Item");
         }
 
         [HttpGet]

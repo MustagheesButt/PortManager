@@ -13,21 +13,8 @@
         <div class="row g-2 justify-content-center">
             <div class="col-md">
                 <div class="form-floating">
-                    <select class="form-select" id="filterByStatus" aria-label="Type">
-                        <option selected>All</option>
-                        <option value="0">Custom Duty Paid</option>
-                        <option value="1">Custom Duty Unpaid</option>
-                        <option value="2">Docked</option>
-                        <option value="2">Not Docked</option>
-                    </select>
-                    <label for="filterByType">Select Status</label>
-                </div>
-            </div>
-
-            <div class="col-md">
-                <div class="form-floating">
                     <input type="text" id="filterBy" class="form-control" />
-                    <label for="filterBy">Filter by name, HIN, or trader name</label>
+                    <label for="filterBy">Filter by name</label>
                 </div>
             </div>
 
@@ -35,9 +22,8 @@
                 <div class="form-floating">
                     <select class="form-select" id="sortBySelect" aria-label="Sort By">
                         <option value="0" selected>Name</option>
-                        <option value="1">HIN</option>
-                        <option value="1">Trader Name</option>
-                        <option value="1">Custom Duty</option>
+                        <option value="1">Quantity</option>
+                        <option value="1">Price</option>
                         <option value="2">Updated At</option>
                         <option value="3">Created At</option>
                     </select>
@@ -70,14 +56,8 @@
             <div class="card @(true ? "border border-success" : "")">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @item.Name <small class="text-secondary">@item.Quantity</small> @if (true)
-                        {
-                        <span class="badge bg-success float-end">Duty Paid</span>
-                        }
-                        else
-                        {
-                        <span class="badge bg-warning float-end">Duty Due</span>
-                        }
+                        @item.Name <small class="text-secondary">@item.Quantity</small>
+                        <span class="badge bg-success float-end">@item.Price @item.Currency</span>
                     </h5>
                     <p class="card-text">
                         @PortManager.Models.User.GetOne(item.trader_id).FullName | Last updated at
