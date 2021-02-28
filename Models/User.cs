@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
+
 namespace PortManager.Models
 {
     public class User
@@ -186,5 +187,6 @@ namespace PortManager.Models
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+
     }
 }

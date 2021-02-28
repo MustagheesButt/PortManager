@@ -16,9 +16,9 @@ namespace PortManager
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Models.User.connString = Configuration.GetConnectionString("MainDb");
-            Models.Ship.connString = Configuration.GetConnectionString("MainDb");
-            Models.Item.connString = Configuration.GetConnectionString("MainDb");
+            Models.User.connString = Configuration.GetConnectionString("MyDb");
+            Models.Ship.connString = Configuration.GetConnectionString("MyDb");
+            Models.Item.connString = Configuration.GetConnectionString("MyDb");
         }
 
         public IConfiguration Configuration { get; }

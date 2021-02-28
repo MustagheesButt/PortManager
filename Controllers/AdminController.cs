@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PortManager.Models;
+using PagedList.Mvc;
+using PagedList;
 
 namespace PortManager.Controllers
 {
     public class AdminController : Controller
     {
         private readonly ILogger<StaticController> _logger;
-
         public AdminController(ILogger<StaticController> logger)
         {
             _logger = logger;

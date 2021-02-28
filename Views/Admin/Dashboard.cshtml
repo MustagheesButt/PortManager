@@ -3,10 +3,11 @@
     ViewData["sidebar"] = true;
 }
 
+
 <div class="container">
     <div id="controls" class="my-3 p-3">
         <div class="d-flex list justify-content-center">
-            <a class="btn btn-success" href="/Admin/AddStaff" >Add New Staff</a>
+            <a class="btn btn-success" href="/Admin/AddStaff">Add New Staff</a>
             <a class="btn btn-success" href="/Admin/AddTrader">Add New Trader</a>
             <a class="btn btn-success" href="/Admin/AddAdmin">Add New Admin</a>
         </div>
@@ -45,40 +46,90 @@
     </div>
 
     <div class="row justify-content-center">
-        <nav>
+        <nav id="paginate1">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                
             </ul>
         </nav>
 
         @foreach (var user in (List<User>)ViewData["users"])
         {
-            <div class="col-sm-10 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@user.FullName <small class="text-secondary">@user.Email</small></h5>
-                        <p class="card-text">@user.Type | @(Array.Exists(new string[] {"Male", "Female"}, e => e == @user.Gender) ?
-                        $"{@user.Gender} |" : "") Last updated at @user.UpdatedAt</p>
-                        <a href="/Admin/EditUser/@user.id" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-info">View Activity</a>
-                        <a href="/Admin/DeleteUser/@user.id" class="btn btn-danger">Delete</a>
-                    </div>
+        <div class="user col-sm-10 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@user.FullName <small class="text-secondary">@user.Email</small></h5>
+                    <p class="card-text">
+                        @user.Type | @(Array.Exists(new string[] {"Male", "Female"}, e => e == @user.Gender) ?
+                        $"{@user.Gender} |" : "") Last updated at @user.UpdatedAt
+                    </p>
+                    <a href="/Admin/EditUser/@user.id" class="btn btn-primary">Edit</a>
+                    <a href="#" class="btn btn-info">View Activity</a>
+                    <a href="/Admin/DeleteUser/@user.id" class="btn btn-danger">Delete</a>
                 </div>
             </div>
+        </div>
         }
 
-        <nav>
+        <nav id="paginate2">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                
             </ul>
         </nav>
+
     </div>
 </div>
+<script>
+    let currPage = 1
+    const pageSize = 10
+    const users = document.querySelectorAll('.user')
+    const totalPages = users.length / pageSize
+
+    function renderPaginatedData() {
+        users.forEach((ele) => {
+            ele.className += ' d-none'
+        })
+        const start = (currPage - 1) * pageSize
+        const end = (currPage - 1) * pageSize + (pageSize - 1)
+        for (let i = start; i < end; i++) {
+            users[i].classList.remove('d-none')
+        }
+    }
+    function renderPagination() {
+        const paginationContainers = document.querySelectorAll('.pagination')
+        paginationContainers.forEach((ele) => {
+            ele.innerHTML = ''
+            if (currPage > 1) {
+                ele.appendChild(paginationButton('Previous', currPage - 1))
+            }
+
+            for (let i = 0; i < totalPages; i++) {
+                ele.appendChild(paginationButton(i + 1, i + 1))
+            }
+
+            if (currPage < totalPages) {
+                ele.appendChild(paginationButton('Next', currPage + 1))
+            }
+        })
+    }
+
+    function paginationButton(text, index) {
+        const li = document.createElement('li')
+        const a = document.createElement('a')
+        a.className = 'page-link'
+        a.href = '#'
+        a.setAttribute('data-index', index)
+        a.innerHTML = text
+        a.addEventListener('click', (e) => {
+            currPage = +e.target.getAttribute('data-index')
+            renderPagination()
+            renderPaginatedData()
+        })
+
+        li.className = 'page-item'
+        li.appendChild(a)
+        return li
+    }
+
+    renderPagination()
+    renderPaginatedData()
+</script>
