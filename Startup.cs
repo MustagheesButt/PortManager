@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,9 +11,11 @@ namespace PortManager
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Models.User.connString = Configuration.GetConnectionString("MyDb");
-            Models.Ship.connString = Configuration.GetConnectionString("MyDb");
-            Models.Item.connString = Configuration.GetConnectionString("MyDb");
+            string ConfigString = Configuration.GetConnectionString("MainDb");
+            Models.User.connString       = ConfigString;
+            Models.Ship.connString       = ConfigString;
+            Models.Item.connString       = ConfigString;
+            Models.CustomDuty.connString = ConfigString;
         }
 
         public IConfiguration Configuration { get; }

@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PortManager.Models;
-using PagedList.Mvc;
-using PagedList;
 
 namespace PortManager.Controllers
 {
@@ -22,19 +17,10 @@ namespace PortManager.Controllers
         [Route("/Admin")]
         public IActionResult Dashboard()
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             ViewData["users"] = Models.User.GetUsers();
-            return View();
-        }
-
-        public IActionResult Ships()
-        {
-            ViewData["ships"] = Models.Ship.GetShips();
-            return View();
-        }
-
-        public IActionResult CustomDuties()
-        {
-            ViewData["duties"] = Models.CustomDuty.GetCustomDuties();
             return View();
         }
 
@@ -60,12 +46,6 @@ namespace PortManager.Controllers
         public IActionResult AddAdmin()
         {
             return View("AddAdmin");
-        }
-
-        [HttpGet("Admin/EditUser/{user_id}")]
-        public IActionResult EditUser(int user_id)
-        {
-            return View("EditUser" , user_id);
         }
 
         [HttpPost]
@@ -128,38 +108,6 @@ namespace PortManager.Controllers
             }
             
             Models.User.Add_User(new Models.User(-1, FirstName, LastName, Email, 0, PasswordHash: Password, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now));
-
-            return RedirectToAction("Dashboard", "Admin");
-        }
-
-        [HttpPost]
-        public IActionResult EditUserForm(int user_id , String FirstName, String LastName, String Email, String Password, String ConfirmPassword)
-        {
-            if (Password != ConfirmPassword)
-            {
-                TempData["errors"] = "Password and Confirm Password don't match";
-                return View("EditUser", user_id);
-            }
-
-            // check if email exists
-            if (Models.User.GetUserByEmail(Email) != null)
-            {
-                TempData["errors"] = $"{Email} is already registered with us.";
-                return View("EditUser", user_id);
-            }
-
-            //Models.User user = Models.User.GetUserByEmail(Email);
-            
-            Models.User.Edit_User(user_id ,FirstName , LastName , Email , Password);
-
-            return RedirectToAction("Dashboard", "Admin");
-        }
-
-        [HttpGet("Admin/DeleteUser/{user_id}")]
-        public IActionResult DeleteUser(int user_id)
-        {
-           
-            PortManager.Models.User.Delete(user_id);
 
             return RedirectToAction("Dashboard", "Admin");
         }

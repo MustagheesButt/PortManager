@@ -1,0 +1,95 @@
+@{
+    ViewData["title"] = "Manage Custom Duties";
+    ViewData["sidebar"] = true;
+}
+
+@using PortManager.Models;
+
+<div class="container">
+    <div id="controls" class="my-3 p-3">
+        <div class="d-flex list justify-content-center">
+            <a href="/CustomDuty/Create" class="btn btn-success">Add New Custom Duty</a>
+        </div>
+        <div class="row g-2 justify-content-center">
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" id="filterByStatus" aria-label="Type">
+                        <option selected>All</option>
+                        <option value="0">Custom Duty Paid</option>
+                        <option value="1">Custom Duty Unpaid</option>
+                        <option value="2">Docked</option>
+                        <option value="2">Not Docked</option>
+                    </select>
+                    <label for="filterByType">Select Status</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" id="filterBy" class="form-control" />
+                    <label for="filterBy">Filter by name, HIN, or trader name</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select" id="sortBySelect" aria-label="Sort By">
+                        <option value="0" selected>Name</option>
+                        <option value="1">HIN</option>
+                        <option value="1">Trader Name</option>
+                        <option value="1">Custom Duty</option>
+                        <option value="2">Updated At</option>
+                        <option value="3">Created At</option>
+                    </select>
+                    <label for="sortBySelect">Sort By</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        @if (((List<CustomDuty>)ViewData["custom_duties"]).Count == 0)
+        {
+        <p>There are no custom duties. Start by adding some.</p>
+        }
+        else
+        {
+        <nav id="paginate1">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+
+        foreach (var custom_duty in (List<CustomDuty>)ViewData["custom_duties"])
+        {
+        <div class="pagination-item col-sm-10 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @custom_duty.Amount <small class="text-secondary">@custom_duty.Currency</small> @if (custom_duty.Status == "Paid")
+                        {
+                        <span class="badge bg-success float-end">Duty Paid</span>
+                        }
+                        else
+                        {
+                        <span class="badge bg-warning float-end">Duty Due</span>
+                        }
+                    </h5>
+                    <p class="card-text">
+                        @Ship.GetShip(custom_duty.ship_id).NickName | Last updated at
+                        @custom_duty.UpdatedAt
+                    </p>
+                    <a href="/CustomDuty/Edit/@custom_duty.id" class="btn btn-primary">Edit</a>
+                    <a href="#" class="btn btn-info">Mark as Paid</a>
+                    <a href="/CustomDuty/Delete/@custom_duty.id" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+            }
+
+        <nav id="paginate2">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+        }
+    </div>
+</div>
+
+<script src="~/js/pagination.js"></script>

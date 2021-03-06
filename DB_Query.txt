@@ -1,4 +1,3 @@
-Query for User
 CREATE TABLE [dbo].[user] (
     [Id]            INT         IDENTITY (1, 1) NOT NULL,
     [first_name]    VARCHAR (100) NULL,
@@ -48,4 +47,16 @@ CREATE TABLE [dbo].[items_ships] (
     [ship_id]             INT NOT NULL,
     [created_at] DATETIME NULL, 
     [updated_at] DATETIME NULL
+);
+
+CREATE TABLE [dbo].[custom_duty] (
+    [id]                  INT         IDENTITY (1, 1) NOT NULL,
+    [amount]              DECIMAL NOT NULL DEFAULT 0,
+    [currency]            VARCHAR(10) NOT NULL DEFAULT 'PKR',
+    [ship_id]             INT NOT NULL,
+    [status]              INT NOT NULL,
+    [due_date]   DATETIME NOT NULL,
+    [created_at] DATETIME NULL,
+    [updated_at] DATETIME NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
 );

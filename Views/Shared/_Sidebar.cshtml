@@ -1,9 +1,10 @@
 @using Microsoft.AspNetCore.Http;
 @{ 
-    PortManager.Models.User user = PortManager.Models.User.GetOne((int)Context.Session.GetInt32("user_id"));
+    PortManager.Models.User user = Helper.CurrentUser(Context.Session);
 }
 <aside class="col-md-2 bg-dark">
     <nav class="nav flex-column mt-5 text-light">
+        <p>Welcome @user.FullName</p>
         @if (user.Type == "Trader")
         {
             <a class="nav-link" href="/Trader">Ships</a>
@@ -13,9 +14,12 @@
         }
         else
         {
-            <a class="nav-link active" aria-current="page" href="/Admin">Users</a>
-            <a class="nav-link" href="/Admin/Ships">Ships</a>
-            <a class="nav-link" href="/Admin/CustomDuties">Custom Duties</a>
+            if (user.Type == "Admin")
+            {
+                <a class="nav-link active" aria-current="page" href="/Admin">Users</a>
+            }
+            <a class="nav-link" href="/Ships">Ships</a>
+            <a class="nav-link" href="/CustomDuties">Custom Duties</a>
             <a class="nav-link" href="/Admin/Settings">Settings</a>
         }
     </nav>

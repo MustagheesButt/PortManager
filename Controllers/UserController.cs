@@ -86,5 +86,29 @@ namespace PortManager.Controllers
             TempData["errors"] = "Password does not match";
             return Redirect("/Login");
         }
+
+        public IActionResult Edit(int id)
+        {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
+            ViewData["user"] = Models.User.GetOne(id);
+            return View("Edit");
+        }
+
+        [HttpPost]
+        public IActionResult Update(int id, String FirstName, String LastName, String Email)
+        {
+            Models.User.Update(id, FirstName, LastName, Email);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            Models.User.Delete(id);
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
     }
 }

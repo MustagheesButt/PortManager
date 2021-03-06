@@ -49,7 +49,7 @@ namespace PortManager.Controllers
         {
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
             ViewData["ships"] = Ship.GetShipsByTrader(trader_id);
-            //Console.WriteLine(trader_id);
+
             return View("Dashboard" , trader_id);
         }
 

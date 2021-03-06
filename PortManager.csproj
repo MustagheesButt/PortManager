@@ -14,7 +14,6 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
-		<PackageReference Include="PagedList.Mvc" Version="4.5.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
 	</ItemGroup>
 

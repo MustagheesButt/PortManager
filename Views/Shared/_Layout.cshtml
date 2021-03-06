@@ -9,7 +9,10 @@
     if (ViewData.ContainsKey("sidebar") && (Boolean)ViewData["sidebar"])
         HasSidebar = true;
 
+    bool IsProtected = Array.Exists(protected_pages, e => e == ViewData["Title"].ToString());
+
     @using Microsoft.AspNetCore.Http;
+    PortManager.Models.User CurrentUser = Helper.CurrentUser(Context.Session);
 }
 
 <!DOCTYPE html>
@@ -34,10 +37,10 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (Array.Exists(protected_pages, e => e == ViewData["Title"].ToString()))
+                        @if (IsProtected)
                         {
                         <li class="nav-item">
-                            @if (PortManager.Models.User.GetOne((int)Context.Session.GetInt32("user_id")).Type == "Admin")
+                            @if (CurrentUser.Type == "Admin")
                             {
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
                             }
@@ -47,7 +50,7 @@
                             }
                         </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Login" >Logout</a>
+                                <a class="nav-link text-dark" href="/Login">Logout</a>
                             </li>
                         }
                         else

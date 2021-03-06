@@ -1,0 +1,33 @@
+﻿@using PortManager.Models;
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    ViewData["sidebar"] = true;
+    PortManager.Models.User user = (PortManager.Models.User)ViewData["user"];
+}
+
+<div class="container">
+    <form action="/User/Update/@user.id" method="POST">
+        <div class="mb-3">
+            <label for="FirstName" class="form-label">First Name</label>
+            <input type="text" name="FirstName" class="form-control" id="FirstName"
+                   placeholder="First Name" value="@user.FirstName" />
+        </div>
+        <div class="mb-3">
+            <label for="LastName" class="form-label">Last Name</label>
+            <input type="text" name="LastName" class="form-control" id="LastName"
+                   placeholder="Last Name" value="@user.LastName" />
+        </div>
+
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Email Address</label>
+            <input type="email" name="Email" class="form-control" id="emailInput"
+                   placeholder="name@example.com" value="@user.Email" />
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </form>
+</div>
+
+

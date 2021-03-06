@@ -165,14 +165,14 @@ namespace PortManager.Models
             return System.Text.Encoding.UTF8.GetString(data);
         }
 
-        public static void Edit_User(int user_id , string fname , string lname , string email , string password)
+        public static void Update(int user_id, string fname, string lname, string email)
         {
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
-            string query = $"Update [user] set first_name = '{fname}' , last_name = '{lname}' , email = '{email}' , password_hash = '{password}' , updated_at = '{System.DateTime.Now}' where id = '{user_id}' ";
-            //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
+            string query = $"Update [user] set first_name = '{fname}' , last_name = '{lname}' , email = '{email}', updated_at = @UpdatedAt where id = '{user_id}'";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
             cmd.ExecuteNonQuery();
             conn.Close();
         }
