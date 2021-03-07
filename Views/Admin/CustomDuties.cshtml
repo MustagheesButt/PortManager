@@ -66,7 +66,7 @@
                         <h5 class="card-title">@duty.Amount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-PK")) <small class="text-secondary">@ship.NickName</small> @if(duty.Status == "Unpaid") {
                             <span class="badge bg-warning float-end">Unpaid</span>
                         }</h5>
-                        <p class="card-text">Due by @duty.DueDate.ToLongDateString() | @PortManager.Models.User.GetOne(ship.trader_id).FullName</p>
+                        <p class="card-text">Due by @duty.DueDate?.ToLongDateString() | @PortManager.Models.User.GetOne(ship.trader_id).FullName</p>
                          <a href="#" class="btn btn-primary">Edit</a>
                         <a href="#" class="btn btn-info">Mark as Paid</a>
                         <a href="#" class="btn btn-danger">Delete</a>

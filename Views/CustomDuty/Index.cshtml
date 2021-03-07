@@ -50,44 +50,65 @@
     <div class="row justify-content-center">
         @if (((List<CustomDuty>)ViewData["custom_duties"]).Count == 0)
         {
-        <p>There are no custom duties. Start by adding some.</p>
+            <p>There are no custom duties. Start by adding some.</p>
         }
         else
         {
-        <nav id="paginate1">
-            <ul class="pagination justify-content-center"></ul>
-        </nav>
+            <nav id="paginate1">
+                <ul class="pagination justify-content-center"></ul>
+            </nav>
 
-        foreach (var custom_duty in (List<CustomDuty>)ViewData["custom_duties"])
-        {
-        <div class="pagination-item col-sm-10 mb-2">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        @custom_duty.Amount <small class="text-secondary">@custom_duty.Currency</small> @if (custom_duty.Status == "Paid")
-                        {
-                        <span class="badge bg-success float-end">Duty Paid</span>
-                        }
-                        else
-                        {
-                        <span class="badge bg-warning float-end">Duty Due</span>
-                        }
-                    </h5>
-                    <p class="card-text">
-                        @Ship.GetShip(custom_duty.ship_id).NickName | Last updated at
-                        @custom_duty.UpdatedAt
-                    </p>
-                    <a href="/CustomDuty/Edit/@custom_duty.id" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-info">Mark as Paid</a>
-                    <a href="/CustomDuty/Delete/@custom_duty.id" class="btn btn-danger">Delete</a>
+            foreach (var custom_duty in (List<CustomDuty>)ViewData["custom_duties"])
+            {
+                <div class="pagination-item col-sm-10 mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                @custom_duty.Amount <small class="text-secondary">@custom_duty.Currency</small> @if (custom_duty.Status == "Paid")
+                                {
+                                    <span class="badge bg-success float-end">Duty Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning float-end">Duty Due</span>
+                                }
+                            </h5>
+                            <p class="card-text">
+                                @Ship.GetShip(custom_duty.ship_id).NickName | Last updated at
+                                @custom_duty.UpdatedAt
+                            </p>
+                            <a href="/CustomDuty/Edit/@custom_duty.id" class="btn btn-primary">Edit</a>
+                            <a href="#" class="btn btn-info">Mark as Paid</a>
+                            <a href="/CustomDuty/Delete/@custom_duty.id" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            }
+            @foreach (var duty in (List<CustomDuty>)ViewData["custom_duties"])
+            {
+                Ship ship = PortManager.Models.Ship.GetShip(duty.ship_id);
+
+                <div class="col-sm-10 mb-2">
+                    <div class="card @(duty.Amount == 0 ? "border border-success" : "")">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                @duty.Amount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-PK")) <small class="text-secondary">@ship.NickName</small> @if (duty.Status == "Unpaid")
+                                {
+                                    <span class="badge bg-warning float-end">Unpaid</span>
+                                }
+                            </h5>
+                            <p class="card-text">Due by @duty.DueDate?.ToLongDateString() | @PortManager.Models.User.GetOne(ship.trader_id).FullName</p>
+                            <a href="#" class="btn btn-primary">Edit</a>
+                            <a href="#" class="btn btn-info">Mark as Paid</a>
+                            <a href="#" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
             }
 
-        <nav id="paginate2">
-            <ul class="pagination justify-content-center"></ul>
-        </nav>
+            <nav id="paginate2">
+                <ul class="pagination justify-content-center"></ul>
+            </nav>
         }
     </div>
 </div>

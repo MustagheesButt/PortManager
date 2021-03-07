@@ -54,8 +54,9 @@ CREATE TABLE [dbo].[custom_duty] (
     [amount]              DECIMAL NOT NULL DEFAULT 0,
     [currency]            VARCHAR(10) NOT NULL DEFAULT 'PKR',
     [ship_id]             INT NOT NULL,
-    [status]              INT NOT NULL,
-    [due_date]   DATETIME NOT NULL,
+    [status]              VARCHAR(10) NOT NULL,
+    [due_date]   DATETIME NULL,
+    [paid_at]    DATETIME NULL,
     [created_at] DATETIME NULL,
     [updated_at] DATETIME NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
