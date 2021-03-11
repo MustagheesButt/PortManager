@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Edit Custom Duty";
+    ViewData["sidebar"] = true;
+    CustomDuty cd = (CustomDuty)ViewData["custom_duty"];
+
+    @using Microsoft.AspNetCore.Http;
+}
+
+<div class="container">
+    <form method="post" action="/CustomDuty/Update/@cd.id">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="amount" value="@cd.Amount" placeholder="Enter Amount">
+        </div>
+        <div class="form-group">
+            <label for="quantity">Currency</label>
+            <input type="text" class="form-control" name="currency" value="@cd.Currency" placeholder="Enter Currency">
+        </div>
+        <div class="form-group">
+            <label for="price">Due Date</label>
+            <input type="date" class="form-control" name="duedate" value="@cd.DueDate?.ToString("yyyy-MM-dd")" placeholder="Due date">
+        </div>
+        <div class="form-group">
+            <label for="price">Status</label>
+            <input type="number" class="form-control" name="status" value="@cd.Status" placeholder="Enter Status">
+        </div>
+        <div class="form-group">
+            <label for="price">Paid At</label>
+            <input type="date" class="form-control" name="paid_at" value="@cd.PaidAt?.ToString("yyyy-MM-dd")" placeholder="Duty Paid At">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

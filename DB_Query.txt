@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS [user];
+DROP TABLE IF EXISTS [trader];
+DROP TABLE IF EXISTS [ship];
+DROP TABLE IF EXISTS [item];
+DROP TABLE IF EXISTS [items_ships];
+DROP TABLE IF EXISTS [custom_duty];
+
+
 CREATE TABLE [dbo].[user] (
     [Id]            INT         IDENTITY (1, 1) NOT NULL,
     [first_name]    VARCHAR (100) NULL,
@@ -54,10 +62,16 @@ CREATE TABLE [dbo].[custom_duty] (
     [amount]              DECIMAL NOT NULL DEFAULT 0,
     [currency]            VARCHAR(10) NOT NULL DEFAULT 'PKR',
     [ship_id]             INT NOT NULL,
-    [status]              VARCHAR(10) NOT NULL,
+    [status]              VARCHAR(10) NOT NULL DEFAULT 'Unpaid',
     [due_date]   DATETIME NULL,
     [paid_at]    DATETIME NULL,
     [created_at] DATETIME NULL,
     [updated_at] DATETIME NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
+-- Dummy data
+INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Mr.', 'Admin', 'admin@gmail.com', 'password', '123-123-1', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Henry', 'Trader', 'henry@gmail.com', 'password', '123-123-2', 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Lisa', 'Staff', 'lisa@gmail.com', 'password', '123-123-3', 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

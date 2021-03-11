@@ -26,52 +26,73 @@ namespace PortManager.Controllers
 
         public IActionResult Add()
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(string name, int quantity, int price, int ship_id)
+        public IActionResult Create(Decimal amount, string currency, DateTime DueDate, int ship_id)
         {
-            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
 
-            Item item = new Item(-1, name, trader_id, quantity, price, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
-            Item.Add(item, ship_id);
+            CustomDuty cd = new CustomDuty(-1, ship_id, amount, currency, DueDate, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
+            CustomDuty.Add(cd);
 
-            return RedirectToAction("Dashboard", "Item");
+            return RedirectToAction("Index", "CustomDuty");
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Item item = Item.GetOne(id);
-            ViewData["item"] = item;
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
+            CustomDuty cd = CustomDuty.GetOne(id);
+            ViewData["custom_duty"] = cd;
 
             return View();
         }
 
         [HttpPost]
-        public IActionResult Update(int id, string name, int quantity, int price, int ship_id)
+        public IActionResult Update(int id, Decimal amount, string currency, DateTime DueDate, DateTime PaidAt)
         {
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
 
-            // TODO verify item belongs to the current_user/trader
+            // TODO verify custom_duty belongs to the current_user/trader
 
-            Item item = Item.GetOne(id);
-            item.Name = name;
-            item.Quantity = quantity;
-            item.Price = price;
-            item.UpdatedAt = DateTime.Now;
+            CustomDuty cd = CustomDuty.GetOne(id);
+            cd.Amount = amount;
+            cd.Currency = currency;
+            cd.DueDate = DueDate;
+            cd.PaidAt = PaidAt;
+            cd.UpdatedAt = DateTime.Now;
 
-            Item.Update(item);
+            CustomDuty.Update(cd);
 
-            return RedirectToAction("Dashboard", "Item");
+            return RedirectToAction("Index", "CustomDuty");
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
             CustomDuty.DeleteById(id);
-            return RedirectToAction("Dashboard", "Trader");
+            return RedirectToAction("Index", "CustomDuty");
+        }
+
+        [HttpGet]
+        public IActionResult MarkPaid(int id)
+        {
+            CustomDuty cd = CustomDuty.GetOne(id);
+            cd.Status = "Paid";
+            cd.PaidAt = DateTime.Now;
+            CustomDuty.Update(cd);
+
+            return RedirectToAction("Index", "CustomDuty");
         }
     }
 }

@@ -8,7 +8,7 @@
 <div class="container">
     <div id="controls" class="my-3 p-3">
         <div class="d-flex list justify-content-center">
-            <a href="/CustomDuty/Create" class="btn btn-success">Add New Custom Duty</a>
+            <a href="/CustomDuty/Add" class="btn btn-success">Add New Custom Duty</a>
         </div>
         <div class="row g-2 justify-content-center">
             <div class="col-md">
@@ -58,32 +58,6 @@
                 <ul class="pagination justify-content-center"></ul>
             </nav>
 
-            foreach (var custom_duty in (List<CustomDuty>)ViewData["custom_duties"])
-            {
-                <div class="pagination-item col-sm-10 mb-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                @custom_duty.Amount <small class="text-secondary">@custom_duty.Currency</small> @if (custom_duty.Status == "Paid")
-                                {
-                                    <span class="badge bg-success float-end">Duty Paid</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-warning float-end">Duty Due</span>
-                                }
-                            </h5>
-                            <p class="card-text">
-                                @Ship.GetShip(custom_duty.ship_id).NickName | Last updated at
-                                @custom_duty.UpdatedAt
-                            </p>
-                            <a href="/CustomDuty/Edit/@custom_duty.id" class="btn btn-primary">Edit</a>
-                            <a href="#" class="btn btn-info">Mark as Paid</a>
-                            <a href="/CustomDuty/Delete/@custom_duty.id" class="btn btn-danger">Delete</a>
-                        </div>
-                    </div>
-                </div>
-            }
             @foreach (var duty in (List<CustomDuty>)ViewData["custom_duties"])
             {
                 Ship ship = PortManager.Models.Ship.GetShip(duty.ship_id);
@@ -98,9 +72,9 @@
                                 }
                             </h5>
                             <p class="card-text">Due by @duty.DueDate?.ToLongDateString() | @PortManager.Models.User.GetOne(ship.trader_id).FullName</p>
-                            <a href="#" class="btn btn-primary">Edit</a>
-                            <a href="#" class="btn btn-info">Mark as Paid</a>
-                            <a href="#" class="btn btn-danger">Delete</a>
+                            <a href="/CustomDuty/Edit/@duty.id" class="btn btn-primary">Edit</a>
+                            <a href="/CustomDuty/MarkPaid/@duty.id" class="btn btn-info">Mark as Paid</a>
+                            <a href="/CustomDuty/Delete/@duty.id" class="btn btn-danger">Delete</a>
                         </div>
                     </div>
                 </div>

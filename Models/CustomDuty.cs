@@ -32,17 +32,17 @@ namespace PortManager.Models
             this.UpdatedAt = UpdatedAt == null ? DateTime.Now : (DateTime)UpdatedAt;
         }
 
-        public static void Add(CustomDuty cd, int ship_id)
+        public static void Add(CustomDuty cd)
         {
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
-            string query = $"INSERT INTO [custom_duty] (ship_id, amount, currency, status, due_date, paid_at, created_at, updated_at) OUTPUT Inserted.ID VALUES({cd.ship_id}, @Amount, '{cd.Currency}', @Status, @DueDate, @PaidAt, @CreatedAt, @UpdatedAt)";
+            string query = $"INSERT INTO [custom_duty] (ship_id, amount, currency, status, due_date, created_at, updated_at) OUTPUT Inserted.ID VALUES({cd.ship_id}, @Amount, '{cd.Currency}', @Status, @DueDate, @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@Amount",    cd.Amount);
             cmd.Parameters.AddWithValue("@Status",    cd.Status);
             cmd.Parameters.AddWithValue("@DueDate",   cd.DueDate);
-            cmd.Parameters.AddWithValue("@PaidAt",    cd.PaidAt);
+            //cmd.Parameters.AddWithValue("@PaidAt",    cd.PaidAt);
             cmd.Parameters.AddWithValue("@CreatedAt", cd.CreatedAt);
             cmd.Parameters.AddWithValue("@UpdatedAt", cd.UpdatedAt);
             cmd.ExecuteNonQuery();
@@ -96,9 +96,9 @@ namespace PortManager.Models
                 string
                     Status = (string)dr[4],
                     Currency = (string)dr[2];
-                DateTime
+                DateTime?
                     DueDate   = (DateTime)dr[5],
-                    PaidAt    = (DateTime)dr[6],
+                    PaidAt    = (dr[6] == DBNull.Value) ? null : (DateTime)dr[6],
                     CreatedAt = (DateTime)dr[7],
                     UpdatedAt = (DateTime)dr[8];
 
@@ -127,9 +127,9 @@ namespace PortManager.Models
                 string
                     Status = (string)dr[4],
                     Currency = (string)dr[2];
-                DateTime
+                DateTime?
                     DueDate   = (DateTime)dr[5],
-                    PaidAt    = (DateTime)dr[6],
+                    PaidAt    = (dr[6] == DBNull.Value) ? null : (DateTime)dr[6],
                     CreatedAt = (DateTime)dr[7],
                     UpdatedAt = (DateTime)dr[8];
 
@@ -160,9 +160,9 @@ namespace PortManager.Models
                 string
                     Status = (string)dr[4],
                     Currency = (string)dr[2];
-                DateTime
+                DateTime?
                     DueDate   = (DateTime)dr[5],
-                    PaidAt    = (DateTime)dr[6],
+                    PaidAt    = (dr[6] == DBNull.Value) ? null : (DateTime)dr[6],
                     CreatedAt = (DateTime)dr[7],
                     UpdatedAt = (DateTime)dr[8];
 
