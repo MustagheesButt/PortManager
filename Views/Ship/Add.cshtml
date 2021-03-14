@@ -46,13 +46,26 @@
         {
             <div class="form-group">
                 <label for="items">Attach Items</label>
-                <select class="form-control" name="items" multiple>
+                <select class="form-control" id="items-selector">
                     @foreach (Item item in Item.GetAllByTrader(CurrentUser.id))
                     {
                         <option value="@item.id">@item.Name</option>
                     }
                 </select>
+                <div id="selected-items">
+                    
+                </div>
             </div>
+            <script>
+                const itemsSelector = document.querySelector('#items-selector')
+                const selectedItems = document.querySelector('#selected-items')
+                const selected = []
+
+                itemsSelector.addEventListener('change', function () {
+                    console.log(itemsSelector.value)
+
+                })
+            </script>
         }
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

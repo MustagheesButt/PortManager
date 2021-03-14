@@ -27,16 +27,17 @@ namespace PortManager
         {
             int
                 Id = (int)dr[0],
-                TraderId = (int)dr[4];
+                TraderId = (int)dr[5];
             Decimal
                 Price = (Decimal)dr[2];
             string
                 Name = (string)dr[1],
+                Manufacturer = dr[4] == DBNull.Value ? "" : (string)dr[4],
                 Currency = (string)dr[3];
             DateTime
-                CreatedAt = (DateTime)dr[5],
-                UpdatedAt = (DateTime)dr[6];
-            return new Item(Id, Name, TraderId, Price, Currency, CreatedAt, UpdatedAt);
+                CreatedAt = (DateTime)dr[6],
+                UpdatedAt = (DateTime)dr[7];
+            return new Item(Id, Name, TraderId, Price, Currency, Manufacturer, CreatedAt, UpdatedAt);
         }
 
         public static CustomDuty ReadCustomDuty(SqlDataReader dr)

@@ -43,18 +43,20 @@ namespace PortManager.Models
             return duties.Last();
         }
 
-        public static void Add(Ship ship)
+        public static int Add(Ship ship)
         {
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"insert into [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', {ship.trader_id}, @NickName, '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @CreatedAt, @UpdatedAt)";
+            string query = $"INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) OUTPUT Inserted.ID VALUES ('{ship.HIN}', {ship.trader_id}, @NickName, '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@NickName", ship.NickName);
             cmd.Parameters.AddWithValue("@CreatedAt", ship.CreatedAt);
             cmd.Parameters.AddWithValue("@UpdatedAt", ship.UpdatedAt);
-            cmd.ExecuteNonQuery();
+            int id = (int)cmd.ExecuteScalar();
             conn.Close();
+
+            return id;
         }
 
         public static void Update(Ship ship)
@@ -165,17 +167,42 @@ namespace PortManager.Models
             return ships;
         }
 
-        public void AttachItem(int item_id, int quantity)
+        public void AttachItems(List<int> items, List<int> quantities)
         {
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
-            string query = $"insert into [items_ships] (item_id, ship_id, quantity, created_at, updated_at) values ({item_id}, {this.id}, {quantity}, @CreatedAt, @UpdatedAt)";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
-            cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+            // clear existing items
+            string query1 = $"DELETE FROM [items_ships] WHERE ship_id = {this.id}";
+            SqlCommand cmd = new SqlCommand(query1, conn);
             cmd.ExecuteNonQuery();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                string query2 = $"INSERT INTO [items_ships] (item_id, ship_id, quantity, created_at, updated_at) VALUES ({items[i]}, {this.id}, {quantities[i]}, @CreatedAt, @UpdatedAt)";
+                cmd = new SqlCommand(query2, conn);
+                cmd.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                cmd.ExecuteNonQuery();
+            }
             conn.Close();
+        }
+
+        public List<Item> Items()
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"SELECT * FROM [items_ships] WHERE ship_id = {this.id}";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<Item> items = new List<Item>();
+            while (dr.Read())
+                items.Add(Item.GetOne((int)dr[0]));
+
+            conn.Close();
+            return items;
         }
     }
 }

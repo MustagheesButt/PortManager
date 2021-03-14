@@ -69,3 +69,7 @@ body {
   white-space: nowrap;
   line-height: 52px; /* Vertically center the text there */
 }
+
+.delete-btn {
+    color: red;
+}

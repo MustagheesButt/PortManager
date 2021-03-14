@@ -9,16 +9,18 @@ namespace PortManager.Models
         public static String connString = "";
         public int id { get; set; }
         public string Name { get; set; }
+        public string Manufacturer { get; set; }
         public Decimal Price { get; set; }
         public string Currency { get; set; }
         public int trader_id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public Item(int id, string Name, int trader_id, Decimal Price=0, string Currency="PKR", DateTime? CreatedAt=null, DateTime? UpdatedAt=null)
+        public Item(int id, string Name, int trader_id, Decimal Price=0, string Currency="PKR", string Manufacturer="", DateTime? CreatedAt=null, DateTime? UpdatedAt=null)
         {
             this.id        = id;
             this.Name      = Name;
+            this.Manufacturer = Manufacturer;
             this.trader_id = trader_id;
             this.Price     = Price;
             this.Currency  = Currency;
@@ -32,7 +34,7 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
 
-            string query = $"INSERT INTO [item] (name, price, currency, trader_id, created_at, updated_at) VALUES('{item.Name}', @Price, '{item.Currency}', @TraderId, @CreatedAt, @UpdatedAt)";
+            string query = $"INSERT INTO [item] (name, price, currency, manufacturer, trader_id, created_at, updated_at) VALUES('{item.Name}', @Price, '{item.Currency}', '{item.Manufacturer}', @TraderId, @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@Price",     item.Price);
             cmd.Parameters.AddWithValue("@TraderId",  item.trader_id);
@@ -48,7 +50,7 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"Update item set name = '{item.Name}', price = '{item.Price}', currency = '{item.Currency}', updated_at = @UpdatedAt where id = '{item.id}'";
+            string query = $"Update item set name = '{item.Name}', price = '{item.Price}', currency = '{item.Currency}', manufacturer = '{item.Manufacturer}', updated_at = @UpdatedAt where id = '{item.id}'";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@UpdatedAt", item.UpdatedAt);
             cmd.ExecuteNonQuery();
@@ -141,6 +143,23 @@ namespace PortManager.Models
 
             conn.Close();
             return quantity;
+        }
+
+        public List<Ship> Ships()
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"SELECT * FROM [items_ships] WHERE item_id = {this.id}";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<Ship> ships = new List<Ship>();
+            while (dr.Read())
+                ships.Add(Ship.GetShip((int)dr[1]));
+
+            conn.Close();
+            return ships;
         }
     }
 }

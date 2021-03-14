@@ -33,17 +33,17 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string name, int price)
+        public IActionResult Create(string name, string manufacturer, int price)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
 
-            Item item = new Item(-1, name, trader_id, price, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
+            Item item = new Item(-1, name, trader_id, price, Manufacturer: manufacturer, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
             Item.Add(item);
 
-            return RedirectToAction("Dashboard", "Item");
+            return RedirectToAction("Index", "Item");
         }
 
         [HttpGet]
@@ -59,17 +59,16 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, string name, int quantity, int price)
+        public IActionResult Update(int id, string name, string manufacturer, int price)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
-
-            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
 
             // TODO verify item belongs to the current_user/trader
 
             Item item = Item.GetOne(id);
             item.Name = name;
+            item.Manufacturer = manufacturer;
             item.Price = price;
             item.UpdatedAt = DateTime.Now;
 
@@ -85,7 +84,7 @@ namespace PortManager.Controllers
             if (x != null) return x;
 
             Item.DeleteById(id);
-            return RedirectToAction("Dashboard", "Trader");
+            return RedirectToAction("Index", "Item");
         }
     }
 }

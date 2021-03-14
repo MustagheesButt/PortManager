@@ -29,7 +29,7 @@
             <div class="col-md">
                 <div class="form-floating">
                     <input type="text" id="filterBy" class="form-control" />
-                    <label for="filterBy">Filter by ship name</label>
+                    <label for="filterBy">Filter by ship or trader name</label>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
                     <div class="card @(duty.Status == "Paid" ? "border border-success" : "")">
                         <div class="card-body">
                             <h5 class="card-title">
-                                @duty.Amount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-PK")) <small class="text-secondary">@ship.NickName</small> @if (duty.Status == "Unpaid")
+                                @duty.Amount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-PK")) <small class="text-secondary" data-filter>@ship.NickName</small> @if (duty.Status == "Unpaid")
                                 {
                                     <span class="badge bg-warning float-end">Unpaid</span>
                                 }
@@ -84,7 +84,7 @@
                                 else
                                 {
                                     <span>Due by @duty.DueDate?.ToLongDateString()</span>
-                                } | @PortManager.Models.User.GetOne(ship.trader_id).FullName
+                                } | <span data-filter>@PortManager.Models.User.GetOne(ship.trader_id).FullName</span>
                             </p>
                             <a href="/CustomDuty/Edit/@duty.id" class="btn btn-primary">Edit</a>
                             @if (duty.Status != "Paid")

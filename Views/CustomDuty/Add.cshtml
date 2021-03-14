@@ -24,7 +24,8 @@
             <select class="form-control" name="ship_id">
                 @foreach (Ship ship in Ship.GetShips())
                 {
-                    <option value="@ship.id">@ship.NickName</option>
+                    List<Item> items = ship.Items();
+                    <option value="@ship.id">@ship.NickName &mdash; Carrying goods worth @items.Aggregate((decimal)0, (sum, next) => sum + next.Price * next.QuantityOnShip(ship.id)) @(items.Count > 0 ? items[0].Currency : "PKR")</option>
                 }
             </select>
         </div>

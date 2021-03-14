@@ -50,7 +50,8 @@ namespace PortManager.Controllers
             if (x != null) return x;
 
             ViewData["ships"] = Models.Ship.GetShips();
-            return View();
+            ViewData["Title"] = "Ships";
+            return View("/Views/Ship/Index.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

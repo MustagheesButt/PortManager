@@ -50,11 +50,11 @@
             <div class="card @(true ? "border border-success" : "")">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @item.Name <small class="text-secondary">@item.Price @item.Currency</small>
-                        <span class="badge bg-success float-end">On X Ships</span>
+                        <span data-filter>@item.Name</span> <small class="text-secondary">@item.Price @item.Currency</small>
+                        <span class="badge bg-success float-end">On @item.Ships().Count Ships</span>
                     </h5>
                     <p class="card-text">
-                        @PortManager.Models.User.GetOne(item.trader_id).FullName | Last updated at
+                        <span data-filter>@PortManager.Models.User.GetOne(item.trader_id).FullName</span> | Last updated at
                         @item.UpdatedAt
                     </p>
                     <a href="/item/Edit/@item.id" class="btn btn-primary">Edit</a>

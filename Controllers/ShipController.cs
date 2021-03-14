@@ -37,7 +37,7 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term, int trader_id)
+        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term, int trader_id, List<int> items, List<int> quantities)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
@@ -45,7 +45,9 @@ namespace PortManager.Controllers
             User CurrentUser = Helper.CurrentUser(HttpContext.Session);
 
             Ship ship = new Ship(-1, hin, trader_id, nick_name, alloc_birth, alloc_term);
-            Ship.Add(ship);
+            ship.id = Ship.Add(ship);
+
+            ship.AttachItems(items, quantities);
 
             if (CurrentUser.Type == "Trader")
                 return RedirectToAction("Dashboard", "Trader");
@@ -68,7 +70,7 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, string hin, string nick_name, int alloc_birth, int alloc_term)
+        public IActionResult Update(int id, string hin, string nick_name, int alloc_birth, int alloc_term, List<int> items, List<int> quantities)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
@@ -80,6 +82,8 @@ namespace PortManager.Controllers
             ship.AllocatedTerminal = alloc_term;
      
             Ship.Update(ship);
+
+            ship.AttachItems(items, quantities);
 
             User CurrentUser = Helper.CurrentUser(HttpContext.Session);
             if (CurrentUser.Type == "Trader")

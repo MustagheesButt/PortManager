@@ -27,7 +27,7 @@
             <div class="col-md">
                 <div class="form-floating">
                     <input type="text" id="filterBy" class="form-control" />
-                    <label for="filterBy">Filter by name</label>
+                    <label for="filterBy">Filter by name and email</label>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
         <div class="pagination-item col-sm-10 mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">@user.FullName <small class="text-secondary">@user.Email</small></h5>
+                    <h5 class="card-title"><span data-filter>@user.FullName</span> <small class="text-secondary" data-filter>@user.Email</small></h5>
                     <p class="card-text">
                         @user.Type | @(Array.Exists(new string[] {"Male", "Female"}, e => e == @user.Gender) ?
                         $"{@user.Gender} |" : "") Last updated at @user.UpdatedAt

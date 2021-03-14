@@ -43,6 +43,7 @@ CREATE TABLE [dbo].[item] (
     [name]                VARCHAR (255) NOT NULL,
     [price]               DECIMAL NOT NULL DEFAULT 0,
     [currency]            VARCHAR(10) NOT NULL DEFAULT 'PKR',
+    [manufacturer]        VARCHAR(100) NULL,
     [trader_id]           INT NOT NULL,
     [created_at] DATETIME NULL,
     [updated_at] DATETIME NULL,
@@ -84,8 +85,10 @@ INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_termin
 INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) VALUES ('33223345', 3, 'Ark MSS', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) VALUES ('22223346', 2, 'Fortune''s End', 2, 6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO [item] (name, price, currency, trader_id, created_at, updated_at) VALUES ('GTX 1660S', 30000, 'PKR', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO [items_ships] (item_id, ship_id, quantity) VALUES (1, 1, 100);
+INSERT INTO [item] (name, price, currency, manufacturer, trader_id, created_at, updated_at) VALUES ('GTX 1660S', 30000, 'PKR', 'Nvidia', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [item] (name, price, currency, manufacturer, trader_id, created_at, updated_at) VALUES ('Ryzen 5 3600X', 45000, 'PKR', 'AMD', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [items_ships] (item_id, ship_id, quantity, created_at, updated_at) VALUES (1, 1, 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [items_ships] (item_id, ship_id, quantity, created_at, updated_at) VALUES (2, 1, 50, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO [item] (name, price, currency, trader_id, created_at, updated_at) VALUES ('RTX 3060', 50000, 'PKR', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO [items_ships] (item_id, ship_id, quantity) VALUES (1, 1, 99);
+INSERT INTO [item] (name, price, currency, manufacturer, trader_id, created_at, updated_at) VALUES ('RTX 3060', 50000, 'PKR', 'Nvidia', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [items_ships] (item_id, ship_id, quantity, created_at, updated_at) VALUES (3, 2, 99, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
