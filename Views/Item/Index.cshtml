@@ -40,24 +40,18 @@
         }
         else
         {
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
+        <nav id="paginate1">
+            <ul class="pagination justify-content-center"></ul>
         </nav>
 
         foreach (var item in (List<Item>)ViewData["items"])
-            {
-        <div class="col-sm-10 mb-2">
+        {
+        <div class="pagination-item col-sm-10 mb-2">
             <div class="card @(true ? "border border-success" : "")">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @item.Name <small class="text-secondary">@item.Quantity</small>
-                        <span class="badge bg-success float-end">@item.Price @item.Currency</span>
+                        @item.Name <small class="text-secondary">@item.Price @item.Currency</small>
+                        <span class="badge bg-success float-end">On X Ships</span>
                     </h5>
                     <p class="card-text">
                         @PortManager.Models.User.GetOne(item.trader_id).FullName | Last updated at
@@ -71,15 +65,10 @@
         </div>
             }
 
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
+        <nav id="paginate2">
+            <ul class="pagination justify-content-center"></ul>
         </nav>
         }
     </div>
 </div>
+<script src="~/js/pagination.js"></script>

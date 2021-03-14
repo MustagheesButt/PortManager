@@ -1,6 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http;
+@{
     ViewData["Title"] = "Edit Ship";
     ViewData["sidebar"] = true;
+    User CurrentUser = Helper.CurrentUser(Context.Session);
     Ship ship = (Ship)ViewData["ship"];
 }
 
@@ -22,6 +24,18 @@
             <label for="hin">Allocated Terminal</label>
             <input type="text" class="form-control" value="@ship.AllocatedTerminal" name="alloc_term" placeholder="Enter Allocated Terminal">
         </div>
+        @if (CurrentUser.Type == "Trader")
+        {
+            <div class="form-group">
+                <label for="items">Attach Items</label>
+                <select class="form-control" name="items" multiple>
+                    @foreach (Item item in Item.GetAllByTrader(CurrentUser.id))
+                    {
+                        <option value="@item.id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        }
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

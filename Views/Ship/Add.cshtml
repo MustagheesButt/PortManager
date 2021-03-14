@@ -1,12 +1,30 @@
-﻿@{
+﻿@using PortManager.Models;
+@using Microsoft.AspNetCore.Http;
+@{
     ViewData["Title"] = "Add New Ship";
     ViewData["sidebar"] = true;
+    User CurrentUser = Helper.CurrentUser(Context.Session);
+    var traders = PortManager.Models.User.GetAllByType(1);
 }
-
-@using PortManager.Models;
 
 <div class="container">
     <form method="post" action="/Ship/Create">
+        @if (CurrentUser.Type == "Trader")
+        {
+            <input type="hidden" name="trader_id" value="@CurrentUser.id" />
+        }
+        else
+        {
+            <div class="form-group">
+                <label for="trader">Select Trader</label>
+                <select class="form-control" name="trader_id">
+                    @foreach (var trader in traders)
+                    {
+                        <option value="@trader.id">@trader.FullName</option>
+                    }
+                </select>
+            </div>
+        }
         <div class="form-group">
             <label for="hin">Ship HIN</label>
             <input type="text" class="form-control" name="hin" placeholder="Enter Ship's HIN">
@@ -23,6 +41,19 @@
             <label for="hin">Allocated Terminal</label>
             <input type="text" class="form-control" name="alloc_term" placeholder="Enter Allocated Terminal">
         </div>
+
+        @if (CurrentUser.Type == "Trader")
+        {
+            <div class="form-group">
+                <label for="items">Attach Items</label>
+                <select class="form-control" name="items" multiple>
+                    @foreach (Item item in Item.GetAllByTrader(CurrentUser.id))
+                    {
+                        <option value="@item.id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        }
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

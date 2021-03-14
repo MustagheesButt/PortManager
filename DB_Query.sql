@@ -41,7 +41,6 @@ CREATE TABLE [dbo].[ship] (
 CREATE TABLE [dbo].[item] (
     [id]                  INT         IDENTITY (1, 1) NOT NULL,
     [name]                VARCHAR (255) NOT NULL,
-    [quantity]            INT NOT NULL,
     [price]               DECIMAL NOT NULL DEFAULT 0,
     [currency]            VARCHAR(10) NOT NULL DEFAULT 'PKR',
     [trader_id]           INT NOT NULL,
@@ -53,6 +52,7 @@ CREATE TABLE [dbo].[item] (
 CREATE TABLE [dbo].[items_ships] (
     [item_id]             INT NOT NULL,
     [ship_id]             INT NOT NULL,
+    [quantity]            INT NOT NULL DEFAULT 0,
     [created_at] DATETIME NULL, 
     [updated_at] DATETIME NULL
 );
@@ -73,5 +73,19 @@ CREATE TABLE [dbo].[custom_duty] (
 
 -- Dummy data
 INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Mr.', 'Admin', 'admin@gmail.com', 'password', '123-123-1', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Henry', 'Trader', 'henry@gmail.com', 'password', '123-123-2', 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Lisa', 'Staff', 'lisa@gmail.com', 'password', '123-123-3', 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Henry', 'Trader', 'henry@gmail.com', 'password', '123-123-2', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Mark', 'Trader', 'mark@gmail.com', 'password', '123-123-3', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) VALUES ('Lisa', 'Staff', 'lisa@gmail.com', 'password', '123-123-4', 2, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO [trader] (user_id, nationality, trading_number) VALUES (2, 'Korea', '1231232');
+INSERT INTO [trader] (user_id, nationality, trading_number) VALUES (3, 'England', '5231252');
+
+INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) VALUES ('11223344', 2, 'Nezuco Victory', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) VALUES ('33223345', 3, 'Ark MSS', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) VALUES ('22223346', 2, 'Fortune''s End', 2, 6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO [item] (name, price, currency, trader_id, created_at, updated_at) VALUES ('GTX 1660S', 30000, 'PKR', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [items_ships] (item_id, ship_id, quantity) VALUES (1, 1, 100);
+
+INSERT INTO [item] (name, price, currency, trader_id, created_at, updated_at) VALUES ('RTX 3060', 50000, 'PKR', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO [items_ships] (item_id, ship_id, quantity) VALUES (1, 1, 99);

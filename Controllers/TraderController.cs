@@ -47,6 +47,9 @@ namespace PortManager.Controllers
         [Route("/Trader")]
         public IActionResult Dashboard()
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
             ViewData["ships"] = Ship.GetShipsByTrader(trader_id);
 

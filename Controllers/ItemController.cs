@@ -13,26 +13,35 @@ namespace PortManager.Controllers
     public class ItemController : Controller
     {
         [Route("/Item")]
-        public IActionResult Dashboard()
+        public IActionResult Index()
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
             ViewData["items"] = Item.GetAllByTrader(trader_id);
 
-            return View("Dashboard", trader_id);
+            return View("Index");
         }
 
         public IActionResult Add()
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(string name, int quantity, int price, int ship_id)
+        public IActionResult Create(string name, int price)
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
 
-            Item item = new Item(-1, name, trader_id, quantity, price, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
-            Item.Add(item, ship_id);
+            Item item = new Item(-1, name, trader_id, price, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
+            Item.Add(item);
 
             return RedirectToAction("Dashboard", "Item");
         }
@@ -40,6 +49,9 @@ namespace PortManager.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             Item item = Item.GetOne(id);
             ViewData["item"] = item;
 
@@ -47,26 +59,31 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, string name, int quantity, int price, int ship_id)
+        public IActionResult Update(int id, string name, int quantity, int price)
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
 
             // TODO verify item belongs to the current_user/trader
 
             Item item = Item.GetOne(id);
             item.Name = name;
-            item.Quantity = quantity;
             item.Price = price;
             item.UpdatedAt = DateTime.Now;
 
             Item.Update(item);
 
-            return RedirectToAction("Dashboard", "Item");
+            return RedirectToAction("Index", "Item");
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
             Item.DeleteById(id);
             return RedirectToAction("Dashboard", "Trader");
         }

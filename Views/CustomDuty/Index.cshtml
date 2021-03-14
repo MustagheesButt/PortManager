@@ -1,24 +1,26 @@
 @{
     ViewData["title"] = "Manage Custom Duties";
     ViewData["sidebar"] = true;
+    User CurrentUser = Helper.CurrentUser(Context.Session);
 }
 
 @using PortManager.Models;
 
 <div class="container">
     <div id="controls" class="my-3 p-3">
-        <div class="d-flex list justify-content-center">
-            <a href="/CustomDuty/Add" class="btn btn-success">Add New Custom Duty</a>
-        </div>
+        @if (CurrentUser.Type != "Trader")
+        {
+            <div class="d-flex list justify-content-center">
+                <a href="/CustomDuty/Add" class="btn btn-success">Add New Custom Duty</a>
+            </div>
+        }
         <div class="row g-2 justify-content-center">
             <div class="col-md">
                 <div class="form-floating">
                     <select class="form-select" id="filterByStatus" aria-label="Type">
                         <option selected>All</option>
-                        <option value="0">Custom Duty Paid</option>
-                        <option value="1">Custom Duty Unpaid</option>
-                        <option value="2">Docked</option>
-                        <option value="2">Not Docked</option>
+                        <option value="0">Paid</option>
+                        <option value="1">Unpaid</option>
                     </select>
                     <label for="filterByType">Select Status</label>
                 </div>
@@ -27,17 +29,16 @@
             <div class="col-md">
                 <div class="form-floating">
                     <input type="text" id="filterBy" class="form-control" />
-                    <label for="filterBy">Filter by name, HIN, or trader name</label>
+                    <label for="filterBy">Filter by ship name</label>
                 </div>
             </div>
 
             <div class="col-md">
                 <div class="form-floating">
                     <select class="form-select" id="sortBySelect" aria-label="Sort By">
-                        <option value="0" selected>Name</option>
-                        <option value="1">HIN</option>
-                        <option value="1">Trader Name</option>
-                        <option value="1">Custom Duty</option>
+                        <option value="0" selected>Due Date</option>
+                        <option value="1">Ship Name</option>
+                        <option value="1">Amount</option>
                         <option value="2">Updated At</option>
                         <option value="3">Created At</option>
                     </select>
@@ -62,18 +63,34 @@
             {
                 Ship ship = PortManager.Models.Ship.GetShip(duty.ship_id);
 
-                <div class="col-sm-10 mb-2">
-                    <div class="card @(duty.Amount == 0 ? "border border-success" : "")">
+                <div class="pagination-item col-sm-10 mb-2">
+                    <div class="card @(duty.Status == "Paid" ? "border border-success" : "")">
                         <div class="card-body">
                             <h5 class="card-title">
                                 @duty.Amount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-PK")) <small class="text-secondary">@ship.NickName</small> @if (duty.Status == "Unpaid")
                                 {
                                     <span class="badge bg-warning float-end">Unpaid</span>
                                 }
+                                else
+                                {
+                                    <span class="badge bg-success float-end">Paid</span>
+                                }
                             </h5>
-                            <p class="card-text">Due by @duty.DueDate?.ToLongDateString() | @PortManager.Models.User.GetOne(ship.trader_id).FullName</p>
+                            <p class="card-text">
+                                @if (duty.Status == "Paid")
+                                {
+                                    <span>Paid at @duty.PaidAt?.ToLongDateString()</span>
+                                }
+                                else
+                                {
+                                    <span>Due by @duty.DueDate?.ToLongDateString()</span>
+                                } | @PortManager.Models.User.GetOne(ship.trader_id).FullName
+                            </p>
                             <a href="/CustomDuty/Edit/@duty.id" class="btn btn-primary">Edit</a>
-                            <a href="/CustomDuty/MarkPaid/@duty.id" class="btn btn-info">Mark as Paid</a>
+                            @if (duty.Status != "Paid")
+                            {
+                                <a href="/CustomDuty/MarkPaid/@duty.id" class="btn btn-info">Mark as Paid</a>
+                            }
                             <a href="/CustomDuty/Delete/@duty.id" class="btn btn-danger">Delete</a>
                         </div>
                     </div>

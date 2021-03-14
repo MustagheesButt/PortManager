@@ -60,12 +60,12 @@
         foreach (var ship in (List<Ship>)ViewData["ships"])
             {
         <div class="pagination-item col-sm-10 mb-2">
-            <div class="card @(ship.CustomDuty() == 0 ? "border border-success" : "")">
+            <div class="card @(ship.CustomDuty() == null ? "border border-success" : "")">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @ship.NickName <small class="text-secondary">@ship.HIN</small> @if (ship.CustomDuty() == 0)
+                        @ship.NickName <small class="text-secondary">@ship.HIN</small> @if (ship.CustomDuty() == null)
                         {
-                        <span class="badge bg-success float-end">Duty Paid</span>
+                        <span class="badge bg-success float-end">Duties Cleared</span>
                         }
                         else
                         {

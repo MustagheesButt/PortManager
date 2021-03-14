@@ -3,7 +3,8 @@
         "Admin Dashboard", "Manage Ships", "Manage Custom Duties",
         "Trader Dashboard", "Staff Dashboard", "Add New Ship", "Edit Ship",
         "Manage Items", "Add New Item", "Edit Item",
-        "Manage Custom Duties", "Add New Custom Duty", "Edit Custom Duty"
+        "Manage Custom Duties", "Add New Custom Duty", "Edit Custom Duty",
+        "Port Staff Dashboard", "Ships"
     };
 
     Boolean HasSidebar = false;
@@ -43,11 +44,15 @@
                         <li class="nav-item">
                             @if (CurrentUser.Type == "Admin")
                             {
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                            }
+                            else if (CurrentUser.Type == "Port Staff")
+                            {
+                                <a class="nav-link text-dark" asp-controller="PortStaff" asp-action="Dashboard">Dashboard</a>
                             }
                             else
                             {
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Trader" asp-action="Dashboard">Dashboard</a>
+                                <a class="nav-link text-dark" asp-controller="Trader" asp-action="Dashboard">Dashboard</a>
                             }
                         </li>
                             <li class="nav-item">

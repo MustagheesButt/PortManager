@@ -13,21 +13,8 @@
             <input type="text" class="form-control" name="name" value="@item.Name" placeholder="Enter Item's Name">
         </div>
         <div class="form-group">
-            <label for="quantity">Quantity</label>
-            <input type="number" class="form-control" name="quantity" value="@item.Quantity" placeholder="Enter Quantity">
-        </div>
-        <div class="form-group">
             <label for="price">Price</label>
             <input type="number" class="form-control" name="price" value="@item.Price" placeholder="Enter Unit Price">
-        </div>
-        <div class="form-group">
-            <label for="hin">Ship</label>
-            <select class="form-control" name="ship_id">
-                @foreach (Ship ship in Ship.GetShipsByTrader((int)Context.Session.GetInt32("user_id")))
-                {
-                    <option value="@ship.id">@ship.NickName</option>
-                }
-            </select>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

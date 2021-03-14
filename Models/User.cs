@@ -123,6 +123,36 @@ namespace PortManager.Models
             return users;
         }
 
+        public static List<User> GetAllByType(int Type)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"SELECT * FROM [user] WHERE user_type = '{Type}'";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<User> users = new List<User>();
+
+            while (dr.Read())
+            {
+                int
+                    Id = (int)dr[0],
+                    UserType = (int)dr[6],
+                    Gender = (int)dr[7];
+                string
+                    FirstName = dr[1].ToString(),
+                    LastName = dr[2].ToString(),
+                    Email = dr[3].ToString();
+                DateTime
+                    CreatedAt = (DateTime)dr[8],
+                    UpdatedAt = (DateTime)dr[9];
+                users.Add(new User(Id, FirstName, LastName, Email, UserType, Gender, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt));
+            }
+
+            return users;
+        }
+
         public static User GetOne(int id)
         {
             List<User> arr = User.GetUsers();

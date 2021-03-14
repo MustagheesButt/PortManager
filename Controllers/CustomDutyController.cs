@@ -18,8 +18,11 @@ namespace PortManager.Controllers
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 
-            //int trader_id = (int)HttpContext.Session.GetInt32("user_id");
-            ViewData["custom_duties"] = CustomDuty.GetAll();
+            User CurrentUser = Helper.CurrentUser(HttpContext.Session);
+            if (CurrentUser.Type == "Trader")
+                ViewData["custom_duties"] = CustomDuty.GetAllByTrader(CurrentUser.id);
+            else
+                ViewData["custom_duties"] = CustomDuty.GetAll();
 
             return View("Index");
         }
@@ -59,7 +62,6 @@ namespace PortManager.Controllers
         [HttpPost]
         public IActionResult Update(int id, Decimal amount, string currency, DateTime DueDate, DateTime PaidAt)
         {
-            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 

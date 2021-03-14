@@ -88,23 +88,10 @@ namespace PortManager.Models
 
             while (dr.Read())
             {
-                int
-                    Id = (int)dr[0],
-                    ShipId = (int)dr[3];
-                Decimal
-                    Amount = (Decimal)dr[1];
-                string
-                    Status = (string)dr[4],
-                    Currency = (string)dr[2];
-                DateTime?
-                    DueDate   = (DateTime)dr[5],
-                    PaidAt    = (dr[6] == DBNull.Value) ? null : (DateTime)dr[6],
-                    CreatedAt = (DateTime)dr[7],
-                    UpdatedAt = (DateTime)dr[8];
-
-                custom_duties.Add(new CustomDuty(Id, ShipId, Amount, Currency, DueDate, PaidAt, Status, CreatedAt, UpdatedAt));
+                custom_duties.Add(Helper.ReadCustomDuty(dr));
             }
 
+            conn.Close();
             return custom_duties;
         }
 
@@ -117,26 +104,14 @@ namespace PortManager.Models
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader dr = cmd.ExecuteReader();
 
+            CustomDuty cd = null;
             if (dr.Read())
             {
-                int
-                    Id = (int)dr[0],
-                    ShipId = (int)dr[3];
-                Decimal
-                    Amount = (Decimal)dr[1];
-                string
-                    Status = (string)dr[4],
-                    Currency = (string)dr[2];
-                DateTime?
-                    DueDate   = (DateTime)dr[5],
-                    PaidAt    = (dr[6] == DBNull.Value) ? null : (DateTime)dr[6],
-                    CreatedAt = (DateTime)dr[7],
-                    UpdatedAt = (DateTime)dr[8];
-
-                return new CustomDuty(Id, ShipId, Amount, Currency, DueDate, PaidAt, Status, CreatedAt, UpdatedAt);
+                cd = Helper.ReadCustomDuty(dr);
             }
 
-            return null;
+            conn.Close();
+            return cd;
         }
 
         public static List<CustomDuty> GetAllByShip(int ship_id)
@@ -152,23 +127,30 @@ namespace PortManager.Models
 
             while (dr.Read())
             {
-                int
-                    Id = (int)dr[0],
-                    ShipId = (int)dr[3];
-                Decimal
-                    Amount = (Decimal)dr[1];
-                string
-                    Status = (string)dr[4],
-                    Currency = (string)dr[2];
-                DateTime?
-                    DueDate   = (DateTime)dr[5],
-                    PaidAt    = (dr[6] == DBNull.Value) ? null : (DateTime)dr[6],
-                    CreatedAt = (DateTime)dr[7],
-                    UpdatedAt = (DateTime)dr[8];
-
-                custom_duties.Add(new CustomDuty(Id, ShipId, Amount, Currency, DueDate, PaidAt, Status, CreatedAt, UpdatedAt));
+                custom_duties.Add(Helper.ReadCustomDuty(dr));
             }
 
+            conn.Close();
+            return custom_duties;
+        }
+
+        public static List<CustomDuty> GetAllByTrader(int trader_id)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"SELECT * FROM [custom_duty] INNER JOIN [ship] ON custom_duty.ship_id = [ship].id WHERE [ship].trader_id = {trader_id}";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            List<CustomDuty> custom_duties = new List<CustomDuty>();
+
+            while (dr.Read())
+            {
+                custom_duties.Add(Helper.ReadCustomDuty(dr));
+            }
+
+            conn.Close();
             return custom_duties;
         }
     }

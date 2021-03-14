@@ -20,30 +20,7 @@ namespace PortManager.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public Ship(int id, string HIN, int trader_id)
-        {
-            this.id        = id;
-            this.HIN       = HIN;
-            this.trader_id = trader_id;
-
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public Ship(int id , string HIN, string NickName, int AllocatedBirth, int AllocatedTerminal)
-        {
-            this.id = id ;
-            this.HIN        = HIN;
-            this.NickName   = NickName;
-            
-            this.AllocatedBirth    = AllocatedBirth;
-            this.AllocatedTerminal = AllocatedTerminal;
-
-            //this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal)
+        public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal, DateTime? CreatedAt=null, DateTime? UpdatedAt=null)
         {
             this.id         = id;
             this.HIN        = HIN;
@@ -53,26 +30,17 @@ namespace PortManager.Models
             this.AllocatedBirth    = AllocatedBirth;
             this.AllocatedTerminal = AllocatedTerminal;
 
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
+            this.CreatedAt = CreatedAt == null ? DateTime.Now : (DateTime)CreatedAt;
+            this.UpdatedAt = UpdatedAt == null ? DateTime.Now : (DateTime)UpdatedAt;
         }
 
-        public Ship(string HIN, int trader_id ,string NickName, int AllocatedBirth, int AllocatedTerminal)
+        public CustomDuty CustomDuty()
         {
-            this.HIN        = HIN;
-            this.trader_id  = trader_id;
-            this.NickName   = NickName;
-            
-            this.AllocatedBirth    = AllocatedBirth;
-            this.AllocatedTerminal = AllocatedTerminal;
+            List<CustomDuty> duties = Models.CustomDuty.GetAllByShip(this.id).Where(cd => cd.Status == "Unpaid").ToList();
 
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
-
-        public int CustomDuty()
-        {
-            return 5000;
+            if (duties.Count == 0)
+                return null;
+            return duties.Last();
         }
 
         public static void Add(Ship ship)
@@ -80,8 +48,9 @@ namespace PortManager.Models
             SqlConnection conn = new SqlConnection(connString);
             conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"insert into [ship] (hin, trader_id , nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', '{ship.trader_id}' ,'{ship.NickName}', '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @CreatedAt, @UpdatedAt)";
+            string query = $"insert into [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) values ('{ship.HIN}', {ship.trader_id}, @NickName, '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @CreatedAt, @UpdatedAt)";
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@NickName", ship.NickName);
             cmd.Parameters.AddWithValue("@CreatedAt", ship.CreatedAt);
             cmd.Parameters.AddWithValue("@UpdatedAt", ship.UpdatedAt);
             cmd.ExecuteNonQuery();
@@ -135,6 +104,7 @@ namespace PortManager.Models
                 
                 ships.Add(new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal));
             }
+            conn.Close();
 
             return ships;
         }
@@ -148,6 +118,7 @@ namespace PortManager.Models
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader dr = cmd.ExecuteReader();
 
+            Ship ship = null;
             if (dr.Read())
             {
                 int
@@ -159,13 +130,10 @@ namespace PortManager.Models
                     HIN = (string)dr[1],
                     NickName = (string)dr[3];
                 
-                Ship ship = new Ship(Id, HIN.Trim(), TraderId, NickName.Trim(), AllocatedBirth, AllocatedTerminal);
-                return ship;
-            }else{
-                
-                return null ;
+                ship = new Ship(Id, HIN.Trim(), TraderId, NickName.Trim(), AllocatedBirth, AllocatedTerminal);
             }
-
+            conn.Close();
+            return ship;
         }
 
         public static List<Ship> GetShipsByTrader(int trader_id)
@@ -193,7 +161,21 @@ namespace PortManager.Models
                 ships.Add(new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal));
             }
 
+            conn.Close();
             return ships;
+        }
+
+        public void AttachItem(int item_id, int quantity)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            conn.Open();
+
+            string query = $"insert into [items_ships] (item_id, ship_id, quantity, created_at, updated_at) values ({item_id}, {this.id}, {quantity}, @CreatedAt, @UpdatedAt)";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+            cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
     }
 }

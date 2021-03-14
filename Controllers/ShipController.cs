@@ -18,8 +18,11 @@ namespace PortManager.Controllers
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 
-            if (Helper.CurrentUser(HttpContext.Session).Type == "Admin")
+            User CurrentUser = Helper.CurrentUser(HttpContext.Session);
+            if (CurrentUser.Type == "Admin" || CurrentUser.Type == "Port Staff")
                 ViewData["ships"] = Ship.GetShips();
+            else
+                return Redirect("/Trader");
 
             ViewData["Title"] = "Ships";
             return View();
@@ -34,17 +37,22 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term)
+        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term, int trader_id)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 
-            int trader_id = (int)HttpContext.Session.GetInt32("user_id");
+            User CurrentUser = Helper.CurrentUser(HttpContext.Session);
 
-            Ship ship = new Ship(hin, trader_id, nick_name, alloc_birth, alloc_term);
+            Ship ship = new Ship(-1, hin, trader_id, nick_name, alloc_birth, alloc_term);
             Ship.Add(ship);
 
-            return RedirectToAction("Dashboard", "Trader");
+            if (CurrentUser.Type == "Trader")
+                return RedirectToAction("Dashboard", "Trader");
+            else if (CurrentUser.Type == "Port Staff")
+                return RedirectToAction("Dashboard", "PortStaff");
+            else
+                return Redirect("/Ships");
         }
 
         [HttpGet]
@@ -72,7 +80,14 @@ namespace PortManager.Controllers
             ship.AllocatedTerminal = alloc_term;
      
             Ship.Update(ship);
-            return RedirectToAction("Dashboard", "Trader");
+
+            User CurrentUser = Helper.CurrentUser(HttpContext.Session);
+            if (CurrentUser.Type == "Trader")
+                return RedirectToAction("Dashboard", "Trader");
+            else if (CurrentUser.Type == "Port Staff")
+                return RedirectToAction("Dashboard", "PortStaff");
+            else
+                return Redirect("/Ships");
         }
 
         [HttpGet]
@@ -82,7 +97,14 @@ namespace PortManager.Controllers
             if (x != null) return x;
 
             Ship.DeleteById(id);
-            return RedirectToAction("Dashboard", "Trader");
+
+            User CurrentUser = Helper.CurrentUser(HttpContext.Session);
+            if (CurrentUser.Type == "Trader")
+                return RedirectToAction("Dashboard", "Trader");
+            else if (CurrentUser.Type == "Port Staff")
+                return RedirectToAction("Dashboard", "PortStaff");
+            else
+                return RedirectToAction("Dashboard", "Admin");
         }
     }
 }
