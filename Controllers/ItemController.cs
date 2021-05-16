@@ -33,14 +33,14 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string name, string manufacturer, int price)
+        public IActionResult Create(string name, string manufacturer, int price, int category)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 
             int trader_id = (int)HttpContext.Session.GetInt32("user_id");
 
-            Item item = new Item(-1, name, trader_id, price, Manufacturer: manufacturer, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
+            Item item = new Item(-1, name, trader_id, price, Manufacturer: manufacturer, Category: category, CreatedAt: DateTime.Now, UpdatedAt: DateTime.Now);
             Item.Add(item);
 
             return RedirectToAction("Index", "Item");
@@ -59,7 +59,7 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, string name, string manufacturer, int price)
+        public IActionResult Update(int id, string name, string manufacturer, int price, int category)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
@@ -70,6 +70,7 @@ namespace PortManager.Controllers
             item.Name = name;
             item.Manufacturer = manufacturer;
             item.Price = price;
+            item._Category = category;
             item.UpdatedAt = DateTime.Now;
 
             Item.Update(item);

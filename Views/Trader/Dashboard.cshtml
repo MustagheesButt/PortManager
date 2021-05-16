@@ -47,53 +47,6 @@
         </div>
     </div>
 
-    <div class="row justify-content-center">
-        @if (((List<Ship>)ViewData["ships"]).Count == 0)
-        {
-        <p>There are no ships right now. Start by adding some new ships.</p>
-        }
-        else
-        {
-        <nav id="paginate1">
-            <ul class="pagination justify-content-center"></ul>
-        </nav>
-
-        foreach (var ship in (List<Ship>)ViewData["ships"])
-        {
-            List<Item> items = ship.Items();
-            <div class="pagination-item col-sm-10 mb-2">
-                <div class="card @(ship.CustomDuty() == null ? "border border-success" : "")">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <span data-filter>@ship.NickName</span> <small class="text-secondary" data-filter>@ship.HIN</small> @if (ship.CustomDuty() == null)
-                            {
-                            <span class="badge bg-success float-end">Duties Cleared</span>
-                            }
-                            else
-                            {
-                            <span class="badge bg-warning float-end">Duty Due</span>
-                            }
-                        </h5>
-                        <p class="card-text">
-                            Carrying @items.Count unique items. @if (items.Count > 0)
-                            {
-                                <span>Total worth @items.Aggregate((decimal)0, (sum, next) => sum + next.Price * next.QuantityOnShip(ship.id)) @items[0].Currency</span>
-                            }<br>
-                             <span data-filter>@PortManager.Models.User.GetOne(ship.trader_id).FullName</span> | Last updated at
-                            @ship.UpdatedAt
-                        </p>
-                        <a href="/Ship/Edit/@ship.id" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-info">View Activity</a>
-                        <a href="/Ship/Delete/@ship.id" class="btn btn-danger">Delete</a>
-                    </div>
-                </div>
-            </div>
-        }
-
-        <nav id="paginate2">
-            <ul class="pagination justify-content-center"></ul>
-        </nav>
-        }
-    </div>
+    <partial name="_Ships" />
 </div>
 <script src="~/js/pagination.js"></script>

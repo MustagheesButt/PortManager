@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Data.SqlClient;
+using System;
 
 namespace PortManager
 {
@@ -11,11 +13,7 @@ namespace PortManager
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            string ConfigString = Configuration.GetConnectionString("MainDb");
-            Models.User.connString       = ConfigString;
-            Models.Ship.connString       = ConfigString;
-            Models.Item.connString       = ConfigString;
-            Models.CustomDuty.connString = ConfigString;
+            Helper.ConnString = Configuration.GetConnectionString("MainDb");
         }
 
         public IConfiguration Configuration { get; }
@@ -55,6 +53,11 @@ namespace PortManager
                     name: "default",
                     pattern: "{controller}/{action}/{id?}");
             });
+        }
+
+        private void OnShutdown()
+        {
+            Helper.GetConn().Close();
         }
     }
 }

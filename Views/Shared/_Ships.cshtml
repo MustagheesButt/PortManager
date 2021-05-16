@@ -1,0 +1,103 @@
+﻿<div class="row justify-content-center">
+    @if (((List<Ship>)ViewData["ships"]).Count == 0)
+    {
+        <p>There are no ships right now. Start by adding some new ships.</p>
+    }
+    else
+    {
+        <nav id="paginate1">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+
+        foreach (var ship in (List<Ship>)ViewData["ships"])
+        {
+            List<Item> items = ship.Items();
+            Decimal total = items.Aggregate((decimal)0, (sum, next) => sum + next.Price * next.QuantityOnShip(ship.id));
+            <div class="pagination-item col-sm-10 mb-2">
+                <div class="card @(ship.ClearedAt == null ? "border border-warning" : "")">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span data-filter>@ship.NickName</span> <small class="text-secondary" data-filter>@ship.HIN</small>
+                            @if (ship.ClearedAt == null)
+                            {
+                                if (ship.CustomDuty() == null)
+                                {
+                                    <span class="badge bg-warning float-end">Not Cleared</span>
+                                }
+                                else if (ship.CustomDuty().PaidAt == null)
+                                {
+                                    if (ship.CustomDuty().DueDate < DateTime.Now)
+                                    {
+                                        <span class="badge bg-danger float-end">Duty Overdue</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning float-end">Duty Due</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info float-end">Waiting Clearance</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="badge bg-success float-end">Cleared</span>
+                            }
+                        </h5>
+                        <p class="card-text">
+                            @ship.Status @(ship._Status == 0 ? "into" : "from") Gawadar. Carrying @items.Count unique items. @if (items.Count > 0)
+                            {
+                                <span>Total worth @total.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-PK"))</span>
+                            }<br>
+                            <span data-filter>@(ship != null ? PortManager.Models.User.GetOne(ship.trader_id)?.FullName : "")</span> | Last updated at
+                            @ship.UpdatedAt
+                        </p>
+                        <a href="/Ship/Edit/@ship.id" class="btn btn-primary">Edit</a>
+                        @if (Helper.CurrentUser(Context.Session).Type == "Trader")
+                        {
+                            if (ship.ClearedAt == null)
+                            {
+                                if (ship.CustomDuty() == null)
+                                {
+                                    <a href="/Ship/RequestClearance/@ship.id" class="btn btn-info">Request Clearance</a>
+                                }
+                                else
+                                {
+                                    if (ship.CustomDuty().PaidAt == null)
+                                    {
+                                        <a href="/CustomDuty/MarkPaid/@ship.CustomDuty().id" class="btn btn-info">Pay Custom Duty</a>
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (ship.CustomDuty() == null)
+                            {
+                                <a href="/Ship/RequestClearance/@ship.id" class="btn btn-info">Generate Custom Duty</a>
+                            }
+                            else if (ship.CustomDuty().PaidAt == null)
+                            {
+                                <a href="#" class="btn btn-info disabled">Waiting Payment</a>
+                            }
+                            else if (ship.ClearedAt == null)
+                            {
+                                <a href="/Ship/MarkClear/@ship.id" class="btn btn-info">Mark Cleared</a>
+                            }
+                            else
+                            {
+                                <a href="/Ship/MarkClear/@ship.id" class="btn btn-info">Unclear & Generate New Duty</a>
+                            }
+                        }
+                        <a href="/Ship/Delete/@ship.id" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <nav id="paginate2">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+    }
+</div>

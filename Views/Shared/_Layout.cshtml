@@ -1,17 +1,7 @@
 ﻿@{
-    string[] protected_pages = {
-        "Admin Dashboard", "Manage Ships", "Manage Custom Duties",
-        "Trader Dashboard", "Staff Dashboard", "Add New Ship", "Edit Ship",
-        "Manage Items", "Add New Item", "Edit Item",
-        "Manage Custom Duties", "Add New Custom Duty", "Edit Custom Duty",
-        "Port Staff Dashboard", "Ships"
-    };
-
     Boolean HasSidebar = false;
     if (ViewData.ContainsKey("sidebar") && (Boolean)ViewData["sidebar"])
         HasSidebar = true;
-
-    bool IsProtected = Array.Exists(protected_pages, e => e == ViewData["Title"].ToString());
 
     @using Microsoft.AspNetCore.Http;
     PortManager.Models.User CurrentUser = Helper.CurrentUser(Context.Session);
@@ -39,7 +29,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (IsProtected)
+                        @if (CurrentUser != null)
                         {
                         <li class="nav-item">
                             @if (CurrentUser.Type == "Admin")
@@ -83,7 +73,7 @@
             {
                 <partial name="_Sidebar" />
             }
-            <main role="main" class="col">
+            <main role="main" class="@(HasSidebar ? "col-md-8" : "col")">
                 @RenderBody()
             </main>
         </div>

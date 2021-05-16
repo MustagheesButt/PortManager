@@ -11,8 +11,6 @@ namespace PortManager.Models
 {
     public class User
     {
-        public static String connString = @"";
-
         public int id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -81,25 +79,20 @@ namespace PortManager.Models
 
         public static void Add_User(User obj)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
             string query = $"insert into [user] (first_name, last_name, email, password_hash, cnic, user_type, gender, created_at, updated_at) values ('{obj.FirstName}', '{obj.LastName}', '{obj.Email}', '{obj.PasswordHash}' , '{obj.CNIC}', {obj._Type}, '{obj._Gender}', @CreatedAt, @UpdatedAt)";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             cmd.Parameters.AddWithValue("@CreatedAt", obj.CreatedAt);
             cmd.Parameters.AddWithValue("@UpdatedAt", obj.UpdatedAt);
             //cmd.Parameters.AddWithValue("@PasswordHash", obj.PasswordHash);
             cmd.ExecuteNonQuery();
-            conn.Close();
+            Helper.CloseConn();
         }
 
         public static List<User> GetUsers()
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"select * from [user]";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             List<User> users = new List<User>();
@@ -120,16 +113,14 @@ namespace PortManager.Models
                 users.Add(new User(Id, FirstName, LastName, Email, UserType, Gender, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt));
             }
 
+            Helper.CloseConn();
             return users;
         }
 
         public static List<User> GetAllByType(int Type)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"SELECT * FROM [user] WHERE user_type = '{Type}'";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             List<User> users = new List<User>();
@@ -150,6 +141,7 @@ namespace PortManager.Models
                 users.Add(new User(Id, FirstName, LastName, Email, UserType, Gender, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt));
             }
 
+            Helper.CloseConn();
             return users;
         }
 
@@ -161,11 +153,8 @@ namespace PortManager.Models
 
         public static User GetUserByEmail(string email)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"select * from [user] where  email = '{email}'";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             if (dr.Read())
@@ -183,9 +172,13 @@ namespace PortManager.Models
                     CreatedAt = (DateTime)dr[8],
                     UpdatedAt = (DateTime)dr[9];
                 User user = new User(Id, FirstName, LastName, Email, UserType, Gender, PasswordHash, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt);
+                Helper.CloseConn();
                 return user ;
             }
-            else { return null; }
+            else {
+                Helper.CloseConn();
+                return null;
+            }
         }
 
         public static String hash(String Password)
@@ -197,25 +190,20 @@ namespace PortManager.Models
 
         public static void Update(int user_id, string fname, string lname, string email)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
             // TODO check if user exists in DB. if yes, then throw exception
             string query = $"Update [user] set first_name = '{fname}' , last_name = '{lname}' , email = '{email}', updated_at = @UpdatedAt where id = '{user_id}'";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
             cmd.ExecuteNonQuery();
-            conn.Close();
+            Helper.CloseConn();
         }
 
         public static void Delete(int user_id)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"delete from [user] where id = '{user_id}' ";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             cmd.ExecuteNonQuery();
-            conn.Close();
+            Helper.CloseConn();
         }
 
     }

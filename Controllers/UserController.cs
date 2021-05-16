@@ -69,7 +69,7 @@ namespace PortManager.Controllers
             // hash input password
             //String hash = Models.User.hash(Password);
 
-            if (user.PasswordHash.Trim() == Password)
+            if (user.PasswordHash == Password)
             {
                 // successfull login. set session and redirect
                 HttpContext.Session.SetInt32("user_id", user.id);

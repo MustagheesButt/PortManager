@@ -7,6 +7,7 @@
 }
 
 <div class="container">
+    <h3 class="h3">Editing @ship.NickName</h3>
     <form method="post" action="/Ship/Update/@ship.id">
         <div class="form-group">
             <label for="hin">Ship HIN</label>
@@ -24,6 +25,14 @@
             <label for="hin">Allocated Terminal</label>
             <input type="text" class="form-control" value="@ship.AllocatedTerminal" name="alloc_term" placeholder="Enter Allocated Terminal">
         </div>
+        <div class="form-group">
+            <label for="status">Importing/Exporting</label>
+            <select class="form-control" name="status">
+                <option value="0" selected="@(ship._Status == 0)">Importing</option>
+                <option value="1" selected="@(ship._Status == 1)">Exporting</option>
+            </select>
+        </div>
+
         @if (CurrentUser.Type == "Trader")
         {
             List<Item> ship_items = ship.Items();
@@ -46,63 +55,13 @@
                         <tr>
                             <td class="item-name">@item.Name</td>
                             <td><input type="hidden" name="items[]" value="@item.id" /></td>
-                            <td><input type="number" name="quantities[]" value="@item.QuantityOnShip(ship.id)" /></td>
+                            <td><input type="number" min="0" name="quantities[]" value="@item.QuantityOnShip(ship.id)" /></td>
                             <td class="delete-btn">&nbsp;&nbsp;&nbsp;&cross;</td>
                         </tr>
                     }
                 </table>
             </div>
-            <script>
-                const itemsSelector = document.querySelector('#items-selector')
-                const selectedItems = document.querySelector('#selected-items')
-
-                itemsSelector.addEventListener('change', function () {
-                    const item = document.createElement('tr')
-                    const nameCell = document.createElement('td')
-                    nameCell.setAttribute('class', 'item-name')
-                    nameCell.innerHTML = itemsSelector.options[this.selectedIndex].text
-
-                    const itemCell = document.createElement('td')
-                    const i = document.createElement('input')
-                    i.setAttribute('type', 'hidden')
-                    i.setAttribute('name', 'items[]')
-                    i.setAttribute('value', itemsSelector.value)
-                    itemCell.appendChild(i)
-
-                    const quantityCell = document.createElement('td')
-                    const q = document.createElement('input')
-                    q.setAttribute('type', 'number')
-                    q.setAttribute('name', 'quantities[]')
-                    q.setAttribute('value', 0)
-                    quantityCell.appendChild(q)
-
-                    const deleteBtn = document.createElement('td')
-                    deleteBtn.setAttribute('class', 'delete-btn')
-                    deleteBtn.innerHTML = "&nbsp;&nbsp;&nbsp;&cross;"
-
-                    item.appendChild(nameCell)
-                    item.appendChild(itemCell)
-                    item.appendChild(quantityCell)
-                    item.appendChild(deleteBtn)
-                    selectedItems.appendChild(item)
-
-                    itemsSelector.options[this.selectedIndex].remove()
-                })
-
-                document.addEventListener('click', function (e) {
-                    const target = e.target
-                    if (target.classList.contains('delete-btn')) {
-                        const item = target
-
-                        const temp = document.createElement('option')
-                        temp.setAttribute('value', item.parentElement.querySelector('input[name^=items]').value)
-                        temp.innerHTML = item.parentElement.querySelector('.item-name').innerHTML
-                        itemsSelector.appendChild(temp)
-
-                        item.parentElement.remove()
-                    }
-                })
-            </script>
+            <script src="~/js/items.js"></script>
         }
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

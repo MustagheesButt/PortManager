@@ -2,7 +2,7 @@
 @{ 
     PortManager.Models.User user = Helper.CurrentUser(Context.Session);
 }
-<aside class="col-md-2 bg-dark">
+<aside class="col-md-2 bg-dark" style="min-height: 80vh;">
     <nav class="nav flex-column mt-5 text-light">
         <p>Welcome @user.FullName</p>
         @if (user.Type == "Trader")
@@ -20,7 +20,7 @@
             }
             <a class="nav-link" href="/Ships">Ships</a>
             <a class="nav-link" href="/CustomDuties">Custom Duties</a>
-            <!--a class="nav-link" href="/Admin/Settings">Settings</a-->
+            <a class="nav-link" href="/Trends">Trends</a>
         }
     </nav>
 </aside>

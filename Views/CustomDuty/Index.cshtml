@@ -10,9 +10,9 @@
     <div id="controls" class="my-3 p-3">
         @if (CurrentUser.Type != "Trader")
         {
-            <div class="d-flex list justify-content-center">
+            <!--div class="d-flex list justify-content-center">
                 <a href="/CustomDuty/Add" class="btn btn-success">Add New Custom Duty</a>
-            </div>
+            </div-->
         }
         <div class="row g-2 justify-content-center">
             <div class="col-md">
@@ -86,12 +86,15 @@
                                     <span>Due by @duty.DueDate?.ToLongDateString()</span>
                                 } | <span data-filter>@PortManager.Models.User.GetOne(ship.trader_id).FullName</span>
                             </p>
-                            <a href="/CustomDuty/Edit/@duty.id" class="btn btn-primary">Edit</a>
-                            @if (duty.Status != "Paid")
+                            @if (Helper.CurrentUser(Context.Session).Type == "Trader" && duty.Status != "Paid")
                             {
                                 <a href="/CustomDuty/MarkPaid/@duty.id" class="btn btn-info">Mark as Paid</a>
                             }
-                            <a href="/CustomDuty/Delete/@duty.id" class="btn btn-danger">Delete</a>
+                            @if (Helper.CurrentUser(Context.Session).Type != "Trader")
+                            {
+                                <a href="/CustomDuty/Edit/@duty.id" class="btn btn-primary">Edit</a>
+                                <a href="/CustomDuty/Delete/@duty.id" class="btn btn-danger">Delete</a>
+                            }
                         </div>
                     </div>
                 </div>

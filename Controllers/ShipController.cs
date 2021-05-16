@@ -37,16 +37,15 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term, int trader_id, List<int> items, List<int> quantities)
+        public IActionResult Create(string hin, string nick_name, int alloc_birth, int alloc_term, int trader_id, int status, List<int> items, List<int> quantities)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
 
             User CurrentUser = Helper.CurrentUser(HttpContext.Session);
 
-            Ship ship = new Ship(-1, hin, trader_id, nick_name, alloc_birth, alloc_term);
+            Ship ship = new Ship(-1, hin, trader_id, nick_name, alloc_birth, alloc_term, status);
             ship.id = Ship.Add(ship);
-
             ship.AttachItems(items, quantities);
 
             if (CurrentUser.Type == "Trader")
@@ -70,7 +69,7 @@ namespace PortManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, string hin, string nick_name, int alloc_birth, int alloc_term, List<int> items, List<int> quantities)
+        public IActionResult Update(int id, string hin, string nick_name, int alloc_birth, int alloc_term, int status, List<int> items, List<int> quantities)
         {
             var x = Helper.Protect(HttpContext.Session);
             if (x != null) return x;
@@ -80,6 +79,7 @@ namespace PortManager.Controllers
             ship.NickName = nick_name;
             ship.AllocatedBirth = alloc_birth;
             ship.AllocatedTerminal = alloc_term;
+            ship._Status = status;
      
             Ship.Update(ship);
 
@@ -109,6 +109,32 @@ namespace PortManager.Controllers
                 return RedirectToAction("Dashboard", "PortStaff");
             else
                 return RedirectToAction("Dashboard", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult RequestClearance(int id)
+        {
+            Ship ship = Ship.GetShip(id);
+            ship.GenerateCustomDuty();
+
+            return RedirectToAction("Index", "Ship");
+        }
+
+        [HttpGet]
+        public IActionResult MarkClear(int id)
+        {
+            Ship ship = Ship.GetShip(id);
+            if (ship.ClearedAt == null)
+                ship.ClearedAt = DateTime.Now;
+            else
+            {
+                ship.ClearedAt = null;
+                ship.GenerateCustomDuty();
+            }
+
+            Ship.Update(ship);
+
+            return RedirectToAction("Index", "Ship");
         }
     }
 }

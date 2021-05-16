@@ -26,6 +26,16 @@ namespace PortManager.Controllers
             return View(page);
         }
 
+        [Route("Trends")]
+        [HttpGet]
+        public IActionResult Trends()
+        {
+            var x = Helper.Protect(HttpContext.Session);
+            if (x != null) return x;
+
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

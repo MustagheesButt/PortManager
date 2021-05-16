@@ -6,8 +6,6 @@ namespace PortManager.Models
 {
     public class Trader
     {
-        public static String connString = @"";
-
         public int User_Id { get; set; }
         public string Nationality { get; set; }
         public string Trading_Number { get; set; }

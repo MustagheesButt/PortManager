@@ -17,26 +17,38 @@ namespace PortManager.Models
         public string NickName { get; set; }
         public int AllocatedBirth { get; set; }
         public int AllocatedTerminal { get; set; }
+        public int _Status { get; set; }
+        public DateTime? ClearedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal, DateTime? CreatedAt=null, DateTime? UpdatedAt=null)
+        public string Status
+        {
+            get
+            {
+                return this._Status == 0 ? "Importing" : "Exporting";
+            }
+        }
+
+        public Ship(int id, string HIN, int trader_id, string NickName, int AllocatedBirth, int AllocatedTerminal, int Status, DateTime? ClearedAt=null, DateTime? CreatedAt=null, DateTime? UpdatedAt=null)
         {
             this.id         = id;
             this.HIN        = HIN;
             this.trader_id  = trader_id;
             this.NickName   = NickName;
-            
+            this._Status    = Status;
+
             this.AllocatedBirth    = AllocatedBirth;
             this.AllocatedTerminal = AllocatedTerminal;
 
+            this.ClearedAt = ClearedAt;
             this.CreatedAt = CreatedAt == null ? DateTime.Now : (DateTime)CreatedAt;
             this.UpdatedAt = UpdatedAt == null ? DateTime.Now : (DateTime)UpdatedAt;
         }
 
         public CustomDuty CustomDuty()
         {
-            List<CustomDuty> duties = Models.CustomDuty.GetAllByShip(this.id).Where(cd => cd.Status == "Unpaid").ToList();
+            List<CustomDuty> duties = Models.CustomDuty.GetAllByShip(this.id).ToList();
 
             if (duties.Count == 0)
                 return null;
@@ -45,134 +57,93 @@ namespace PortManager.Models
 
         public static int Add(Ship ship)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, created_at, updated_at) OUTPUT Inserted.ID VALUES ('{ship.HIN}', {ship.trader_id}, @NickName, '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @CreatedAt, @UpdatedAt)";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            string query = $"INSERT INTO [ship] (hin, trader_id, nick_name, allocated_birth, allocated_terminal, status, created_at, updated_at) OUTPUT Inserted.ID VALUES ('{ship.HIN}', {ship.trader_id}, @NickName, '{ship.AllocatedBirth}', '{ship.AllocatedTerminal}', @Status, @CreatedAt, @UpdatedAt)";
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             cmd.Parameters.AddWithValue("@NickName", ship.NickName);
+            cmd.Parameters.AddWithValue("@Status", ship._Status);
             cmd.Parameters.AddWithValue("@CreatedAt", ship.CreatedAt);
             cmd.Parameters.AddWithValue("@UpdatedAt", ship.UpdatedAt);
             int id = (int)cmd.ExecuteScalar();
-            conn.Close();
 
+            Helper.CloseConn();
             return id;
         }
 
         public static void Update(Ship ship)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
             // TODO check if ship exists in DB. if yes, then throw exception
-            string query = $"Update ship set hin = '{ship.HIN}' , nick_name = '{ship.NickName}' , allocated_birth = '{ship.AllocatedBirth}' , allocated_terminal = '{ship.AllocatedTerminal}' , updated_at = @UpdatedAt where id = '{ship.id}' ";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            string query = $"Update ship set hin = '{ship.HIN}' , nick_name = @NickName , allocated_birth = '{ship.AllocatedBirth}', allocated_terminal = '{ship.AllocatedTerminal}', cleared_at = @ClearedAt, status = @Status, updated_at = @UpdatedAt where id = '{ship.id}';";
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
+            cmd.Parameters.AddWithValue("@NickName", ship.NickName);
+            cmd.Parameters.AddWithValue("@Status", ship._Status);
+            cmd.Parameters.AddWithValue("@ClearedAt", ship.ClearedAt == null ? DBNull.Value : ship.ClearedAt);
             cmd.Parameters.AddWithValue("@UpdatedAt", ship.UpdatedAt);
             cmd.ExecuteNonQuery();
-            conn.Close();
+            Helper.CloseConn();
         }
 
         public static void DeleteById(int id)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"delete from [ship] WHERE id = {id}";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             cmd.ExecuteNonQuery();
-            conn.Close();
+            Helper.CloseConn();
         }
 
         public static List<Ship> GetShips()
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"select * from [ship]";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             List<Ship> ships = new List<Ship>();
 
             while (dr.Read())
             {
-                int
-                    Id = (int)dr[0],
-                    TraderId = (int)dr[2],
-                    AllocatedBirth = (int)dr[4],
-                    AllocatedTerminal = (int)dr[5];
-                string
-                    HIN = (string)dr[1],
-                    NickName = (string)dr[3];
-                
-                ships.Add(new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal));
+                ships.Add(Helper.ReadShip(dr));
             }
-            conn.Close();
+            Helper.CloseConn();
 
             return ships;
         }
 
         public static Ship GetShip(int ship_id)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"select * from [ship] where id = '{ship_id}' ";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             Ship ship = null;
             if (dr.Read())
-            {
-                int
-                    Id = (int)dr[0],
-                    TraderId = (int)dr[2],
-                    AllocatedBirth = (int)dr[4],
-                    AllocatedTerminal = (int)dr[5];
-                string
-                    HIN = (string)dr[1],
-                    NickName = (string)dr[3];
-                
-                ship = new Ship(Id, HIN.Trim(), TraderId, NickName.Trim(), AllocatedBirth, AllocatedTerminal);
+            {                
+                ship = Helper.ReadShip(dr);
             }
-            conn.Close();
+            Helper.CloseConn();
             return ship;
         }
 
         public static List<Ship> GetShipsByTrader(int trader_id)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"select * from [ship] where trader_id = '{trader_id}' ";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             List<Ship> ships = new List<Ship>();
 
             while (dr.Read())
             {
-                int
-                    Id = (int)dr[0],
-                    TraderId = (int)dr[2],
-                    AllocatedBirth = (int)dr[4],
-                    AllocatedTerminal = (int)dr[5];
-                string
-                    HIN = (string)dr[1],
-                    NickName = (string)dr[3];
-                
-                ships.Add(new Ship(Id, HIN, TraderId, NickName, AllocatedBirth, AllocatedTerminal));
+                ships.Add(Helper.ReadShip(dr));
             }
 
-            conn.Close();
+            Helper.CloseConn();
             return ships;
         }
 
         public void AttachItems(List<int> items, List<int> quantities)
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             // clear existing items
+            SqlConnection conn = Helper.GetConn();
             string query1 = $"DELETE FROM [items_ships] WHERE ship_id = {this.id}";
             SqlCommand cmd = new SqlCommand(query1, conn);
             cmd.ExecuteNonQuery();
@@ -185,23 +156,31 @@ namespace PortManager.Models
                 cmd.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
                 cmd.ExecuteNonQuery();
             }
-            conn.Close();
+            Helper.CloseConn();
+        }
+
+        public void GenerateCustomDuty()
+        {
+            Decimal total = this.Items().Aggregate((decimal)0, (sum, next) => sum + next.Price * next.QuantityOnShip(this.id));
+            Decimal duty = 0;
+            if (this._Status == 0)
+                duty = total * 0.27m;
+            else
+                duty = total * 0.15m;
+            Models.CustomDuty.Add(new CustomDuty(-1, id, duty, DueDate: DateTime.Now.AddDays(15), ImportOrExport: this._Status));
         }
 
         public List<Item> Items()
         {
-            SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-
             string query = $"SELECT * FROM [items_ships] WHERE ship_id = {this.id}";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, Helper.GetConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             List<Item> items = new List<Item>();
             while (dr.Read())
                 items.Add(Item.GetOne((int)dr[0]));
 
-            conn.Close();
+            Helper.CloseConn();
             return items;
         }
     }
